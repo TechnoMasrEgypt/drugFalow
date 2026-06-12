@@ -1,3 +1,4 @@
+import 'package:drug_flow/core/localization/lang_keys.dart';
 import 'package:drug_flow/core/widgets/svg_handler.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +6,7 @@ import 'package:flutter/material.dart';
 import '../constants/colors.dart';
 import '../constants/images.dart';
 import '../constants/styles.dart';
-import '../utils/helper.dart';
+import '../utils/helpers.dart';
 
 class SearchFieldTxt extends StatefulWidget{
   final TextEditingController searchController;
@@ -32,7 +33,8 @@ class _SearchFieldTxt  extends State<SearchFieldTxt>{
             color: color121217,
           ),
           decoration: InputDecoration(
-            hintText: "ابحث عن مخزن, اسم الدواء أو المادة الفعالة",
+            hintText: context.translate(LangKeys.searchPlaceholder)
+,
             hintStyle: TextStyles.textStyleNormal15.copyWith(
               color: color6C6C89,
             ),

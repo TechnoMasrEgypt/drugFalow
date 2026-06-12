@@ -1,1 +1,0 @@
-const String baseUrl = "https://nagy.technomasrsystems.com/public/api";

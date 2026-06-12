@@ -8,9 +8,9 @@ import '../constants/colors.dart';
 import '../constants/fonts.dart';
 import '../constants/images.dart';
 import '../constants/styles.dart';
-import '../utils/helper.dart';
+import '../utils/helpers.dart';
 
-AppBar customAppBar({BuildContext? context}){
+AppBar customAppBar({BuildContext? context,String? title}){
 
   return AppBar(
     toolbarHeight: context!.height/12,
@@ -28,7 +28,7 @@ AppBar customAppBar({BuildContext? context}){
             borderRadius: BorderRadius.circular(8),
             border: Border.all(color: colorD1d1dB,width: 1.0)
         ),
-        child: Text("العربية",style: TextStyles.textStyleNormal13.copyWith(
+        child: Text(title??"العربية",style: TextStyles.textStyleNormal13.copyWith(
             color: color121217
         ),textScaler: TextScaler.linear(1),),
       ),

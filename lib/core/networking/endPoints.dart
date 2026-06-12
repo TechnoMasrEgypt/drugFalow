@@ -1,0 +1,21 @@
+const String baseUrl = "https://nagy.technomasrsystems.com/public/api";
+
+class ApiConstants {
+  static const String apiBaseUrl = baseUrl;
+  static const String login = "/auth/login";
+  static const String deleteAccount = "/auth/delete-account";
+  static const String slides = "/sliders";
+  static const String search = "/search";
+  static const String warehouses = "/warehouses";
+  static const String products = "/products";
+  static const String register = "/auth/register";
+  static const String governorates = "/governorates";
+  static const String medicine = "/medicines";
+  static const String ingrade = "/active-ingredients";
+  static const String profile = "/profile";
+  static const String coupons  = "/coupons";
+  static const String updateProfile = "/profile";
+  static const String resendCode = "/auth/verify/resend-code";
+  static const String verifyResetCode = "/auth/verify-reset-code";
+  static const String forgetPassword = "/auth/forgot-password";
+}

@@ -7,7 +7,7 @@ import '../../../features/favourite/presentation/cubit/favourites_cubit.dart';*/
 import '../../constants/colors.dart';
 import '../../constants/styles.dart';
 import '../../local/auth_local_data_source.dart';
-import '../../utils/helper.dart';
+import '../../utils/helpers.dart';
 import '../back_to_login_alert.dart';
 import '../svg_handler.dart';
 

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../constants/colors.dart';
-import '../utils/helper.dart';
+import '../utils/helpers.dart';
 import 'image_handler.dart';
 class NetWorkImageHandler extends StatelessWidget {
   final String image;
