@@ -1,15 +1,22 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'create_order_params.g.dart';
+
+@JsonSerializable()
 class CreateOrderParams {
-  dynamic governorateId;
-  dynamic cityId;
-  dynamic areaId;
+  @JsonKey(name: 'cart_id')
+  final int cartId;
 
-  CreateOrderParams({this.governorateId, this.cityId, this.areaId});
+  @JsonKey(name: 'is_drafted')
+  final bool isDrafted;
 
-  Map<String,dynamic>toMap(){
-    return {
-      "governorate_id" : governorateId,
-      "city_id" : cityId,
-      "area_id" : areaId
-    };
-  }
+  const CreateOrderParams({
+    required this.cartId,
+    required this.isDrafted,
+  });
+
+  factory CreateOrderParams.fromJson(Map<String, dynamic> json) =>
+      _$CreateOrderParamsFromJson(json);
+
+  Map<String, dynamic> toJson() => _$CreateOrderParamsToJson(this);
 }

@@ -16,10 +16,11 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DoneBottomSheet extends StatefulWidget {
-  const DoneBottomSheet({super.key});
+  const DoneBottomSheet({super.key, required this.onTap});
 
   @override
   State<DoneBottomSheet> createState() => _LanguageBottomSheetState();
+  final VoidCallback onTap;
 }
 
 class _LanguageBottomSheetState extends State<DoneBottomSheet> {
@@ -78,10 +79,85 @@ class _LanguageBottomSheetState extends State<DoneBottomSheet> {
                 textColor: color121217,
                 borderColor: const Color.fromARGB(255, 213, 213, 221),
                 btnTitle: 'طلباتي',
-                onPressed: () {
-                  context.push(ordersSc);
-                },
+                onPressed: widget.onTap,
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class DeleteBottomSheet extends StatelessWidget {
+  const DeleteBottomSheet({super.key, required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(20.r),
+      width: double.infinity,
+      height: 360.h,
+      decoration: const BoxDecoration(
+        color: white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      child: SafeArea(
+        child: Column(
+          children: [
+            // drag indicator
+            Container(
+              width: 40.w,
+              height: 4.h,
+              decoration: BoxDecoration(
+                color: Colors.grey.shade300,
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+
+            SizedBox(height: 20.h),
+
+            // icon / image
+            Icon(Icons.delete_forever, size: 90.r, color: Colors.redAccent),
+
+            SizedBox(height: 20.h),
+
+            Text(
+              "هل أنت متأكد من حذف المنتج؟",
+              textAlign: TextAlign.center,
+              style: TextStyles.textStyleBold18.copyWith(color: Colors.black),
+            ),
+
+            SizedBox(height: 12.h),
+
+            Text(
+              "لن يمكنك التراجع عن هذا الإجراء بعد الحذف",
+              textAlign: TextAlign.center,
+              style: TextStyles.textStyleNormal13.copyWith(
+                color: const Color(0xff999999),
+              ),
+            ),
+
+            const Spacer(),
+
+            // buttons
+            Row(
+              children: [
+                Expanded(
+                  child: CustomButtonOutline(
+                    color: Colors.white,
+                    fontSize: 14.sp,
+                    textColor: Colors.black,
+                    borderColor: const Color.fromARGB(255, 231, 70, 70),
+                    btnTitle: 'حذف',
+                    onPressed: onTap,
+                  ),
+                ),
+
+                SizedBox(width: 12.w),
+              ],
             ),
           ],
         ),

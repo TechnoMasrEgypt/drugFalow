@@ -11,6 +11,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+// ── Data holder so the overlay can rebuild without remove+insert ──────────────
+class _DropdownData {
+  final List<SearchProductModel> results;
+  final bool isLoading;
+  final bool visible;
+  const _DropdownData({
+    required this.results,
+    required this.isLoading,
+    required this.visible,
+  });
+}
+
 class MedicineSearchField extends StatefulWidget {
   final int? warehouseId;
   const MedicineSearchField({super.key, this.warehouseId});
@@ -25,6 +37,12 @@ class _MedicineSearchFieldState extends State<MedicineSearchField> {
   OverlayEntry? _overlayEntry;
   final LayerLink _layerLink = LayerLink();
 
+  // ValueNotifier drives the overlay's content so we never need remove+insert
+  // (which would cause a brief focus-loss and collapse the dropdown).
+  final ValueNotifier<_DropdownData> _dropdownNotifier = ValueNotifier(
+    const _DropdownData(results: [], isLoading: false, visible: false),
+  );
+
   @override
   void initState() {
     super.initState();
@@ -33,24 +51,48 @@ class _MedicineSearchFieldState extends State<MedicineSearchField> {
   }
 
   void _onFocusChange() {
-    if (!_focus.hasFocus) _removeOverlay();
+    if (!_focus.hasFocus) {
+      // Delay so that tapping a dropdown result still fires onTap before
+      // the overlay disappears.
+      Future.delayed(const Duration(milliseconds: 150), () {
+        if (mounted && !_focus.hasFocus) {
+          _dropdownNotifier.value = const _DropdownData(
+            results: [],
+            isLoading: false,
+            visible: false,
+          );
+        }
+      });
+    }
   }
 
+  /// Show or update the dropdown — reuses the single OverlayEntry instead of
+  /// remove+insert, so focus is never disturbed.
   void _showDropdown(List<SearchProductModel> results, bool isLoading) {
-    _removeOverlay();
-    _overlayEntry = _buildOverlayEntry(results, isLoading);
-    Overlay.of(context).insert(_overlayEntry!);
+    _dropdownNotifier.value = _DropdownData(
+      results: results,
+      isLoading: isLoading,
+      visible: true,
+    );
+
+    if (_overlayEntry == null) {
+      _overlayEntry = _buildOverlayEntry();
+      Overlay.of(context).insert(_overlayEntry!);
+    }
+    // The ValueListenableBuilder inside the entry handles the rest.
   }
 
   void _removeOverlay() {
+    _dropdownNotifier.value = const _DropdownData(
+      results: [],
+      isLoading: false,
+      visible: false,
+    );
     _overlayEntry?.remove();
     _overlayEntry = null;
   }
 
-  OverlayEntry _buildOverlayEntry(
-    List<SearchProductModel> results,
-    bool isLoading,
-  ) {
+  OverlayEntry _buildOverlayEntry() {
     return OverlayEntry(
       builder: (_) => Positioned(
         width: context.width - 32.w,
@@ -58,10 +100,16 @@ class _MedicineSearchFieldState extends State<MedicineSearchField> {
           link: _layerLink,
           showWhenUnlinked: false,
           offset: Offset(0, 48.h + 4.h),
-          child: _SearchDropdown(
-            results: results,
-            isLoading: isLoading,
-            onSelect: _onResultTapped,
+          child: ValueListenableBuilder<_DropdownData>(
+            valueListenable: _dropdownNotifier,
+            builder: (_, data, __) {
+              if (!data.visible) return const SizedBox.shrink();
+              return _SearchDropdown(
+                results: data.results,
+                isLoading: data.isLoading,
+                onSelect: _onResultTapped,
+              );
+            },
           ),
         ),
       ),
@@ -71,7 +119,7 @@ class _MedicineSearchFieldState extends State<MedicineSearchField> {
   void _onResultTapped(SearchProductModel product) {
     final cubit = context.read<MedicineSearchCubit>();
 
-    // ✅ Read BEFORE clear — clear() wipes lastResults
+    // Read BEFORE clear — clear() wipes lastResults
     final allResults = cubit.lastResults;
     final query = _controller.text;
 
@@ -158,6 +206,7 @@ class _MedicineSearchFieldState extends State<MedicineSearchField> {
   @override
   void dispose() {
     _removeOverlay();
+    _dropdownNotifier.dispose();
     _focus.removeListener(_onFocusChange);
     _focus.dispose();
     _controller.dispose();

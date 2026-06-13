@@ -18,4 +18,16 @@ class ApiConstants {
   static const String resendCode = "/auth/verify/resend-code";
   static const String verifyResetCode = "/auth/verify-reset-code";
   static const String forgetPassword = "/auth/forgot-password";
+  static const String myCart = "/orders/my-carts";
+  static const String addToCart = "/orders/add-to-cart";
+    static const String updateCart = "/orders/cart-items/";
+  static const String deleteCart = "/orders/cart-items/";
+  static const String deleteWholeCart = "/orders/cart/";
+  static const String createOrder = "/orders/confirm";
+  static const String createReview = "/orders/review";
+  static const String myOrders = "/orders/my-orders";
+  static const String orderStatuses = "/orders/statuses";
+  static const String orderDetails = "/orders/";
+  static const String contactUs = "/contacts";
+
 }

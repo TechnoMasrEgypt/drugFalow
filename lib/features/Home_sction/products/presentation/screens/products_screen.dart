@@ -92,7 +92,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                         verticalSpace(16),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 16.w),
-                          child: const MedicineSearchField(),
+                          child: const MedicineSearchField(warehouseId: 1,),
                         ),
                         verticalSpace(16),
                         SingleChildScrollView(

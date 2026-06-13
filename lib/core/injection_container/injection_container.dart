@@ -17,15 +17,20 @@ import 'package:drug_flow/features/Auths/otp/data/repo/otp_repo.dart';
 import 'package:drug_flow/features/Auths/otp/logic/otp_cubit.dart';
 import 'package:drug_flow/features/Auths/register/logic/register_cubit.dart';
 import 'package:drug_flow/features/Home_sction/bottom_bar/bottom_bar_inj.dart';
+import 'package:drug_flow/features/Home_sction/cart/data/cart_repos.dart';
+import 'package:drug_flow/features/Home_sction/cart/ui/bloc/cart_cubit.dart';
 import 'package:drug_flow/features/Home_sction/home/data/repos/warehouse_repos.dart';
 import 'package:drug_flow/features/Home_sction/home/logic/home_cubit.dart';
 import 'package:drug_flow/features/Home_sction/home/home_inj.dart';
 import 'package:drug_flow/features/Home_sction/notifications/notifications_inj.dart';
+import 'package:drug_flow/features/Home_sction/orders/domain/repositories/orders_repositories.dart';
 import 'package:drug_flow/features/Home_sction/orders/orders_inj.dart';
+import 'package:drug_flow/features/Home_sction/orders/presentation/cubit/orders/orders_cubit.dart';
 import 'package:drug_flow/features/Home_sction/products/presentation/cubit/products/products_cubit.dart';
 import 'package:drug_flow/features/Home_sction/products/presentation/cubit/product_details/medicine_search_cubit.dart';
 import 'package:drug_flow/features/Home_sction/products/products_inj.dart';
 import 'package:drug_flow/features/Home_sction/profile/data/logic/profile_repo.dart';
+import 'package:drug_flow/features/Home_sction/profile/presentation/cubit/contact_us/contact_us_cubit.dart';
 import 'package:drug_flow/features/Home_sction/profile/presentation/cubit/coupons/coupons_cubit.dart';
 import 'package:drug_flow/features/Home_sction/profile/presentation/cubit/faqs/faqs_cubit.dart';
 import 'package:drug_flow/features/Home_sction/profile/presentation/cubit/profile/profile_cubit.dart';
@@ -52,10 +57,15 @@ Future<void> init() async {
   sl.registerLazySingleton<WarehouseRepository>(
     () => WarehouseRepository(sl()),
   );
-  sl.registerFactory<FaqsCubit  >(() => FaqsCubit (sl()));
-  sl.registerFactory<CouponsCubit  >(() => CouponsCubit (sl()));
+  sl.registerFactory<FaqsCubit>(() => FaqsCubit(sl()));
+  sl.registerFactory<CouponsCubit>(() => CouponsCubit(sl()));
   sl.registerFactory<ProfileCubit>(() => ProfileCubit(sl()));
   sl.registerFactory<ProfileRepo>(() => ProfileRepo(sl()));
+  sl.registerFactory<CartRepos>(() => CartRepos(sl()));
+  sl.registerFactory<OrdersRepo>(() => OrdersRepo(sl()));
+  sl.registerFactory<CartCubit>(() => CartCubit(sl()));
+  sl.registerFactory<OrdersCubit>(() => OrdersCubit(sl()));
+  sl.registerFactory<SocialLinksCubit>(() => SocialLinksCubit(sl()));
   sl.registerFactory<WarehouseCubit>(() => WarehouseCubit(sl()));
   sl.registerFactory<ProductsCubit>(() => ProductsCubit(sl()));
   sl.registerFactory<MedicineSearchCubit>(() => MedicineSearchCubit(sl()));

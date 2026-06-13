@@ -24,6 +24,15 @@ class ProfileCubit extends Cubit<ProfileState> {
   final landlineController = TextEditingController();
   final addressController = TextEditingController();
 
+  final TextEditingController countryCodeController = TextEditingController(
+    text: '+20',
+  );
+  final TextEditingController countryCode2Controller = TextEditingController(
+    text: '+20',
+  );
+  final TextEditingController countryCode3Controller = TextEditingController(
+    text: '+20',
+  );
   // ─────────────────────────────
   // Get Profile
   // ─────────────────────────────
@@ -56,6 +65,9 @@ class ProfileCubit extends Cubit<ProfileState> {
     secondPhoneController.text = data.secondPhone ?? '';
     landlineController.text = data.landline ?? '';
     addressController.text = data.address ?? '';
+    data.city?.toString();
+    data.area?.toString();
+    data.governorate.toString();
   }
 
   // ─────────────────────────────
@@ -67,10 +79,11 @@ class ProfileCubit extends Cubit<ProfileState> {
     final result = await _repo.updateProfile(body);
 
     result.when(
-      success: (data) {
-        profile = data;
+      success: (data) async {
+        profile = data.data;
 
-        emit(ProfileState.updateSuccess(data));
+        emit(ProfileState.updateSuccess(profile!));
+        // await getProfile();
       },
       failure: (error) {
         debugPrint(error.apiErrorModel.message);

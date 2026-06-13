@@ -61,16 +61,33 @@ class ProductItem extends StatelessWidget {
                     textScaler: TextScaler.linear(1),
                   ),
                   SizedBox(height: context.height / 90),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      PartitionNameItem(title: "Paracetamol"),
-                      SizedBox(width: 5.w),
-                      PartitionNameItem(title: "Caffeine"),
-                    ],
-                  ),
+                  if (data.activeIngredients != null &&
+                      data.activeIngredients!.isNotEmpty)
+                    Wrap(
+                      spacing: 4.w,
+                      runSpacing: 2.h,
+                      children: data.activeIngredients!
+                          .map(
+                            (ing) => Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 6.w,
+                                vertical: 2.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: colorF7F7F8,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Text(
+                                ing.name ?? "",
+                                style: TextStyles.textStyleNormal10.copyWith(
+                                  color: AppColor.partitionNameItemcolor,
+                                ),
+                                textScaler: TextScaler.linear(1),
+                              ),
+                            ),
+                          )
+                          .toList(),
+                    ),
                   SizedBox(height: 4.h),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -110,29 +127,41 @@ class ProductItem extends StatelessWidget {
                     children: [
                       Text(
                         data.price ?? "٥٨",
-                        style: TextStyles.textStyleNormal16.copyWith(
+                        style: TextStyles.textStyleNormal14.copyWith(
                           color: color121217,
                           fontWeight: FontWeight.w600,
                         ),
                         textScaler: TextScaler.linear(1),
                       ),
                       horizontalSpace(4),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text(
-                            "جنيه مصري",
-                            style: TextStyles.textStyleNormal11.copyWith(
-                              color: color6C6C89,
-                              fontWeight: FontWeight.w400,
-                            ),
-                            textScaler: TextScaler.linear(1),
-                          ),
-                          SizedBox(width: context.width / 30),
-                        ],
+                      Text(
+                        "جنيه مصري",
+                        style: TextStyles.textStyleNormal11.copyWith(
+                          color: color6C6C89,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        textScaler: TextScaler.linear(1),
                       ),
+                      SizedBox(width: context.width / 30),
+                      // Text(
+                      //   data.priceBeforeDiscount ?? "٥٨",
+                      //   style: TextStyles.textStyleNormal10.copyWith(
+                      //     color: color121217,
+                      //     fontWeight: FontWeight.w300,
+                      //     decoration: TextDecoration.lineThrough,
+                      //   ),
+                      //   textScaler: TextScaler.linear(1),
+                      // ),
+                      // horizontalSpace(4),
+                      // Text(
+                      //   "جنيه مصري",
+                      //   style: TextStyles.textStyleNormal10.copyWith(
+                      //     color: color6C6C89,
+                      //     fontWeight: FontWeight.w200,
+                      //   ),
+                      //   textScaler: TextScaler.linear(1),
+                      // ),
+                      horizontalSpace(4),
                       Spacer(),
 
                       Container(
@@ -147,7 +176,8 @@ class ProductItem extends StatelessWidget {
                         ),
                         child: Center(
                           child: Text(
-                            "خصم ٥٢٪",
+                            "خصم ${(data.discountPercentage ?? 0).toStringAsFixed(0)}%",
+
                             style: TextStyles.textStyleNormal11.copyWith(
                               color: colorD50B3E,
                               fontWeight: FontWeight.w600,

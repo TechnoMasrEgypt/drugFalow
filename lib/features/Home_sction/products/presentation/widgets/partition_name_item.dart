@@ -20,14 +20,12 @@ class PartitionNameItem extends StatelessWidget {
         color: colorF7F7F8,
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Center(
-        child: Text(
-          title,
-          style: TextStyles.textStyleNormal10.copyWith(
-            color: AppColor.partitionNameItemcolor,
-          ),
-          textScaler: TextScaler.linear(1),
+      child: Text(
+        title,
+        style: TextStyles.textStyleNormal10.copyWith(
+          color: AppColor.partitionNameItemcolor,
         ),
+        textScaler: TextScaler.linear(1),
       ),
     );
   }

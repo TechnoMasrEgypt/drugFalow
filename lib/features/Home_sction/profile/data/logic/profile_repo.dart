@@ -3,6 +3,8 @@ import 'package:drug_flow/core/networking/api_error_handler.dart';
 import 'package:drug_flow/core/networking/api_result.dart';
 import 'package:drug_flow/core/networking/api_services.dart';
 import 'package:drug_flow/features/Auths/auth/domain/entities/delete_account/delete_account_response.dart';
+import 'package:drug_flow/features/Home_sction/profile/data/contact_request.dart';
+import 'package:drug_flow/features/Home_sction/profile/data/contact_response.dart';
 import 'package:drug_flow/features/Home_sction/profile/data/coupon_response.dart';
 import 'package:drug_flow/features/Home_sction/profile/data/faqs_response.dart';
 import 'package:drug_flow/features/Home_sction/profile/data/get_profile/profile_response.dart';
@@ -35,13 +37,13 @@ class ProfileRepo {
     }
   }
 
-  Future<ApiResult<ProfileData>> updateProfile(
+  Future<ApiResult<ProfileResponse>> updateProfile(
     UpdateProfileRequestBody body,
   ) async {
     try {
       final response = await _apiService.updateProfile(body);
 
-      return ApiResult.success(response.data!);
+      return ApiResult.success(response );
     } catch (e, s) {
       debugPrint('UPDATE PROFILE ERROR => $e');
       debugPrintStack(stackTrace: s);
@@ -75,11 +77,20 @@ class ProfileRepo {
     }
   }
 
-  Future<ApiResult<SocialLinksData>> getSocialLinks() async {
+  Future<ApiResult<SocialLinksResponse>> getSocialLinks() async {
     try {
       final response = await _apiService.getSocialLinks();
 
-      return ApiResult.success(response.data);
+      return ApiResult.success(response);
+    } catch (e) {
+      return ApiResult.failure(ErrorHandler.handle(e));
+    }
+  }
+  Future<ApiResult<ContactResponse>> contactUs(ContactRequest body) async {
+    try {
+      final response = await _apiService.contactUs(body);
+
+      return ApiResult.success(response);
     } catch (e) {
       return ApiResult.failure(ErrorHandler.handle(e));
     }

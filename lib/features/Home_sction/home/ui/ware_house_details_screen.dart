@@ -92,8 +92,8 @@ class _WarehouseDetailsScreenState extends State<WarehouseDetailsScreen> {
                         horizontal: context.width / 25),
                     child: Column(
                       children: [
-                    if (data?.data != null)              // ← data.data is WarehouseDetailsData
-            WarehouseHeader(data: data!.data!),
+                    if (data?.extra?.warehouse != null)              // ← data.data is WarehouseDetailsData
+            WarehouseHeader(data: data!.extra!.warehouse!),
                         verticalSpace(8),
                         ProductsFilterRow(
                           isGridView: _isGridView,

@@ -1,8 +1,10 @@
 import 'package:drug_flow/core/constants/colors.dart';
 import 'package:drug_flow/core/constants/screens.dart';
 import 'package:drug_flow/core/constants/styles.dart';
+import 'package:drug_flow/features/Home_sction/orders/presentation/cubit/orders/orders_cubit.dart';
 import 'package:drug_flow/features/Home_sction/orders/presentation/screens/order_details_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
@@ -108,12 +110,19 @@ class _OrdersScreenState extends State<OrdersScreen>
   // Upcoming tab: 0=تاريخ الطلب  1=قيد المراجعة  2=قيد التنفيذ
   int _pastFilter = 0;
   int _upcomingFilter = 0;
+@override
+void initState() {
+  super.initState();
 
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 2, vsync: this);
-  }
+  context.read<OrdersCubit>()
+    ..getMyOrders()
+    ..getOrderStatuses();
+
+  _tabController = TabController(
+    length: 2,
+    vsync: this,
+  );
+}
 
   @override
   void dispose() {

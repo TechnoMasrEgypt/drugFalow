@@ -1,12 +1,14 @@
 import 'package:drug_flow/core/constants/colors.dart';
-import 'package:drug_flow/core/constants/images.dart';
-import 'package:drug_flow/core/constants/spacing.dart';
 import 'package:drug_flow/core/constants/styles.dart';
-import 'package:drug_flow/core/utils/network_images.dart';
+import 'package:drug_flow/core/utils/helpers.dart';
+import 'package:drug_flow/features/Home_sction/cart/ui/bloc/cart_cubit.dart';
+import 'package:drug_flow/features/Home_sction/cart/ui/bloc/cart_state.dart';
 import 'package:drug_flow/features/Home_sction/cart/ui/order_card.dart';
+import 'package:drug_flow/features/Home_sction/orders/domain/entities/create_order/create_order_params.dart';
+import 'package:drug_flow/features/Home_sction/orders/presentation/cubit/orders/orders_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
 
@@ -15,110 +17,178 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
-  bool _isCurrentRequest = true; // true = current request, false = save later
+  bool isDrafted = true;
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<CartCubit>().getMyCart(isDrafted: true);
+  }
+
+  void _switchTab(bool value) {
+    setState(() => isDrafted = value);
+    context.read<CartCubit>().getMyCart(isDrafted: value);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: ListView(
-        padding: EdgeInsets.all(16.r),
+      body: Column(
         children: [
-          // ── Header ──
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("سلة المشتريات", style: TextStyles.textStyleBold20),
-              SizedBox(height: 4.h),
-              
-            ],
-          ),
-          SizedBox(height: 12.h),
-
-          // ── Toggle tabs ──
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Save for later
-              GestureDetector(
-                onTap: () => setState(() => _isCurrentRequest = false),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  padding: EdgeInsets.only(top: 5.h),
-                  width: 160.w,
-                  height: 70.h,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.r),
-                    color: _isCurrentRequest ? Colors.white : AppColor.textPrimary,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.bookmark_outline_rounded,
-                        color: _isCurrentRequest ? AppColor.textPrimary : Colors.white,
-                      ),
-                      verticalSpace(5),
-                      Text(
-                        "save for later",
-                        style: TextStyles.textStyleNormal16.copyWith(
-                          color: _isCurrentRequest ? AppColor.textPrimary : Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
+          Padding(
+            padding: EdgeInsets.all(16.r),
+            child: Column(
+              children: [
+                Text('سلة المشتريات', style: TextStyles.textStyleBold20),
+                SizedBox(height: 12.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _Tab(
+                      title: 'save for later',
+                      icon: Icons.bookmark,
+                      active: !isDrafted,
+                      onTap: () => _switchTab(false),
+                    ),
+                    _Tab(
+                      title: 'current request',
+                      icon: Icons.wallet,
+                      active: isDrafted,
+                      onTap: () => _switchTab(true),
+                    ),
+                  ],
                 ),
-              ),
+              ],
+            ),
+          ),
 
-              // Current request
-              GestureDetector(
-                onTap: () => setState(() => _isCurrentRequest = true),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  padding: EdgeInsets.only(top: 5.h),
-                  width: 160.w,
-                  height: 70.h,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.r),
-                    color: _isCurrentRequest ? AppColor.textPrimary : Colors.white,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.account_balance_wallet_rounded,
-                        color: _isCurrentRequest ? Colors.white : AppColor.textPrimary,
-                      ),
-                      verticalSpace(2),
-                      Text(
-                        "current request",
-                        style: TextStyles.textStyleNormal16.copyWith(
-                          color: _isCurrentRequest ? Colors.white : AppColor.textPrimary,
+          Expanded(
+            child: BlocBuilder<CartCubit, CartState>(
+              builder: (context, state) {
+
+                // 🔵 LOADING
+                if (state is CartLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                // 🔴 ERROR
+                if (state is CartError) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(state.message, textAlign: TextAlign.center),
+                        SizedBox(height: 16.h),
+                        TextButton(
+                          onPressed: () {
+                            context.read<CartCubit>().getMyCart(
+                              isDrafted: isDrafted,
+                            );
+                          },
+                          child: const Text('إعادة المحاولة'),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 16.h),
+                      ],
+                    ),
+                  );
+                }
 
-          // ── Body ──
-          OrderCard(
-            isSaveForLater: !_isCurrentRequest,
-            onConfirm: () {},
-            onDelete: () {},
-            onProductTap: () {},
-          ),
-          const SizedBox(height: 16),
-          OrderCard(
-            isSaveForLater: !_isCurrentRequest,
-            onConfirm: () {},
-            onDelete: () {},
-            onProductTap: () {},
+                // 🟢 SUCCESS
+                if (state is CartSuccess) {
+                  final carts = state.response.data ?? [];
+
+                  if (carts.isEmpty) {
+                    return const Center(child: Text('السلة فارغة 🛒'));
+                  }
+
+                  return ListView(
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
+                    children: [
+                      for (final cart in carts)
+                        OrderCard(
+                          cart: cart,
+                          isSaveForLater: isDrafted,
+
+                          onConfirm: () {
+                            context.read<OrdersCubit>().createOrder(
+                              CreateOrderParams(
+                                cartId: cart.id,
+                                isDrafted: isDrafted,
+                              ),
+                            );
+                          },
+
+                          onDelete: () {
+                            context.read<CartCubit>().deleteWholeCart(
+                              id: cart.id,
+                              isDrafted: isDrafted,
+                            );
+                          },
+
+                          onSaveForLater: () {
+                            context.read<CartCubit>().saveCartAsDraft(
+                              id: cart.id,
+                            );
+                          },
+
+                          onProductTap: () {},
+                        ),
+                    ],
+                  );
+                }
+
+                // ⚪ fallback (IMPORTANT)
+                return const SizedBox.shrink();
+              },
+            ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Tab widget (unchanged from original)
+// ─────────────────────────────────────────────────────────────────────────────
+class _Tab extends StatelessWidget {
+  const _Tab({
+    required this.title,
+    required this.icon,
+    required this.active,
+    required this.onTap,
+  });
+
+  final String title;
+  final IconData icon;
+  final bool active;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        width: 160.w,
+        height: 70.h,
+        margin: EdgeInsets.symmetric(horizontal: 4.w),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10.r),
+          color: active ? AppColor.textPrimary : Colors.white,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: active ? Colors.white : AppColor.textPrimary),
+            Text(
+              title,
+              style: TextStyles.textStyleNormal16.copyWith(
+                color: active ? Colors.white : AppColor.textPrimary,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

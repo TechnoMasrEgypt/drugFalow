@@ -26,9 +26,8 @@ class MedicineSearchCubit extends Cubit<MedicineSearchState> {
       return;
     }
 
-    emit(const MedicineSearchState.loading());
-
     _debounce = Timer(const Duration(milliseconds: 400), () {
+      emit(const MedicineSearchState.loading());
       _search(trimmed);
     });
   }

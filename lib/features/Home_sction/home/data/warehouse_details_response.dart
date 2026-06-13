@@ -2,45 +2,49 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'warehouse_details_response.g.dart';
 
-
+@JsonSerializable(explicitToJson: true)
 class WarehouseDetailsResponse {
   final bool? success;
   final String? message;
-  final WarehouseDetailsData? data;
+  final ExtraModel? extra;
   final List<ProductModel>? items;
   final MetaModel? meta;
 
   WarehouseDetailsResponse({
     this.success,
     this.message,
-    this.data,
+    this.extra,
     this.items,
     this.meta,
   });
 
-  // Manually handled because data lives at json['extra']['warehouse']
-  factory WarehouseDetailsResponse.fromJson(Map<String, dynamic> json) {
-    final extra = json['extra'] as Map<String, dynamic>?;
-    final warehouse = extra?['warehouse'] as Map<String, dynamic>?;
+  factory WarehouseDetailsResponse.fromJson(
+    Map<String, dynamic> json,
+  ) =>
+      _$WarehouseDetailsResponseFromJson(json);
 
-    // items come from the top-level 'items' array
-    final rawItems = json['items'] as List<dynamic>?;
-
-    return WarehouseDetailsResponse(
-      success: json['success'] as bool?,
-      message: json['message'] as String?,
-      data: warehouse != null ? WarehouseDetailsData.fromJson(warehouse) : null,
-      items: rawItems
-          ?.map((e) => ProductModel.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      meta: json['meta'] != null
-          ? MetaModel.fromJson(json['meta'] as Map<String, dynamic>)
-          : null,
-    );
-  }
+  Map<String, dynamic> toJson() =>
+      _$WarehouseDetailsResponseToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
+class ExtraModel {
+  final WarehouseDetailsData? warehouse;
+
+  ExtraModel({
+    this.warehouse,
+  });
+
+  factory ExtraModel.fromJson(
+    Map<String, dynamic> json,
+  ) =>
+      _$ExtraModelFromJson(json);
+
+  Map<String, dynamic> toJson() =>
+      _$ExtraModelToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
 class WarehouseDetailsData {
   final int? id;
 
@@ -92,10 +96,155 @@ class WarehouseDetailsData {
     this.areas,
   });
 
-  factory WarehouseDetailsData.fromJson(Map<String, dynamic> json) =>
+  factory WarehouseDetailsData.fromJson(
+    Map<String, dynamic> json,
+  ) =>
       _$WarehouseDetailsDataFromJson(json);
 
-  Map<String, dynamic> toJson() => _$WarehouseDetailsDataToJson(this);
+  Map<String, dynamic> toJson() =>
+      _$WarehouseDetailsDataToJson(this);
+}
+
+@JsonSerializable()
+class GovernorateModel {
+  final int? id;
+  final String? name;
+
+  GovernorateModel({
+    this.id,
+    this.name,
+  });
+
+  factory GovernorateModel.fromJson(
+    Map<String, dynamic> json,
+  ) =>
+      _$GovernorateModelFromJson(json);
+
+  Map<String, dynamic> toJson() =>
+      _$GovernorateModelToJson(this);
+}
+
+@JsonSerializable()
+class CityModel {
+  final int? id;
+  final String? name;
+
+  CityModel({
+    this.id,
+    this.name,
+  });
+
+  factory CityModel.fromJson(
+    Map<String, dynamic> json,
+  ) =>
+      _$CityModelFromJson(json);
+
+  Map<String, dynamic> toJson() =>
+      _$CityModelToJson(this);
+}
+
+@JsonSerializable()
+class AreaModel {
+  final int? id;
+  final String? name;
+
+  @JsonKey(name: 'city_id')
+  final int? cityId;
+
+  AreaModel({
+    this.id,
+    this.name,
+    this.cityId,
+  });
+
+  factory AreaModel.fromJson(
+    Map<String, dynamic> json,
+  ) =>
+      _$AreaModelFromJson(json);
+
+  Map<String, dynamic> toJson() =>
+      _$AreaModelToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class ProductModel {
+  final int? id;
+  final String? name;
+  final String? image;
+  final String? price;
+
+  @JsonKey(name: 'price_before_discount')
+  final String? priceBeforeDiscount;
+
+  @JsonKey(name: 'discount_percentage')
+  final num? discountPercentage;
+
+  final String? category;
+
+  @JsonKey(name: 'active_ingredients')
+  final List<ActiveIngredientModel>? activeIngredients;
+
+  final ProductWarehouseModel? warehouse;
+
+  ProductModel({
+    this.id,
+    this.name,
+    this.image,
+    this.price,
+    this.priceBeforeDiscount,
+    this.discountPercentage,
+    this.category,
+    this.activeIngredients,
+    this.warehouse,
+  });
+
+  factory ProductModel.fromJson(
+    Map<String, dynamic> json,
+  ) =>
+      _$ProductModelFromJson(json);
+
+  Map<String, dynamic> toJson() =>
+      _$ProductModelToJson(this);
+}
+
+@JsonSerializable()
+class ActiveIngredientModel {
+  final int? id;
+  final String? name;
+
+  ActiveIngredientModel({
+    this.id,
+    this.name,
+  });
+
+  factory ActiveIngredientModel.fromJson(
+    Map<String, dynamic> json,
+  ) =>
+      _$ActiveIngredientModelFromJson(json);
+
+  Map<String, dynamic> toJson() =>
+      _$ActiveIngredientModelToJson(this);
+}
+
+@JsonSerializable()
+class ProductWarehouseModel {
+  final int? id;
+  final String? name;
+  final String? logo;
+
+  ProductWarehouseModel({
+    this.id,
+    this.name,
+    this.logo,
+  });
+
+  factory ProductWarehouseModel.fromJson(
+    Map<String, dynamic> json,
+  ) =>
+      _$ProductWarehouseModelFromJson(json);
+
+  Map<String, dynamic> toJson() =>
+      _$ProductWarehouseModelToJson(this);
 }
 
 @JsonSerializable()
@@ -126,106 +275,11 @@ class MetaModel {
     this.prevPageUrl,
   });
 
-  factory MetaModel.fromJson(Map<String, dynamic> json) =>
+  factory MetaModel.fromJson(
+    Map<String, dynamic> json,
+  ) =>
       _$MetaModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$MetaModelToJson(this);
-}
-
-@JsonSerializable()
-class GovernorateModel {
-  final int? id;
-  final String? name;
-
-  GovernorateModel({this.id, this.name});
-
-  factory GovernorateModel.fromJson(Map<String, dynamic> json) =>
-      _$GovernorateModelFromJson(json);
-
-  Map<String, dynamic> toJson() => _$GovernorateModelToJson(this);
-}
-
-@JsonSerializable()
-class CityModel {
-  final int? id;
-  final String? name;
-
-  CityModel({this.id, this.name});
-
-  factory CityModel.fromJson(Map<String, dynamic> json) =>
-      _$CityModelFromJson(json);
-
-  Map<String, dynamic> toJson() => _$CityModelToJson(this);
-}
-
-@JsonSerializable()
-class AreaModel {
-  final int? id;
-  final String? name;
-
-  @JsonKey(name: 'city_id')
-  final int? cityId;
-
-  AreaModel({this.id, this.name, this.cityId});
-
-  factory AreaModel.fromJson(Map<String, dynamic> json) =>
-      _$AreaModelFromJson(json);
-
-  Map<String, dynamic> toJson() => _$AreaModelToJson(this);
-}
-
-@JsonSerializable()
-class ProductModel {
-  final int? id;
-  final String? name;
-  final String? image;
-  final String? price;
-  final String? category;
-
-  @JsonKey(name: 'active_ingredients')
-  final List<ActiveIngredientModel>? activeIngredients;
-
-  final ProductWarehouseModel? warehouse;
-
-  ProductModel({
-    this.id,
-    this.name,
-    this.image,
-    this.price,
-    this.category,
-    this.activeIngredients,
-    this.warehouse,
-  });
-
-  factory ProductModel.fromJson(Map<String, dynamic> json) =>
-      _$ProductModelFromJson(json);
-
-  Map<String, dynamic> toJson() => _$ProductModelToJson(this);
-}
-
-@JsonSerializable()
-class ActiveIngredientModel {
-  final int? id;
-  final String? name;
-
-  ActiveIngredientModel({this.id, this.name});
-
-  factory ActiveIngredientModel.fromJson(Map<String, dynamic> json) =>
-      _$ActiveIngredientModelFromJson(json);
-
-  Map<String, dynamic> toJson() => _$ActiveIngredientModelToJson(this);
-}
-
-@JsonSerializable()
-class ProductWarehouseModel {
-  final int? id;
-  final String? name;
-  final String? logo;
-
-  ProductWarehouseModel({this.id, this.name, this.logo});
-
-  factory ProductWarehouseModel.fromJson(Map<String, dynamic> json) =>
-      _$ProductWarehouseModelFromJson(json);
-
-  Map<String, dynamic> toJson() => _$ProductWarehouseModelToJson(this);
+  Map<String, dynamic> toJson() =>
+      _$MetaModelToJson(this);
 }

@@ -163,6 +163,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               GestureDetector(
                                 onTap: () {
                                   context.push(contactUsSc);
+                                  print(" contact us sc  $contactUsSc");
                                 },
                                 child: _MenuItem(
                                   image: hedp,

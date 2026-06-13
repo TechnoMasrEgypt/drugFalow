@@ -1,11 +1,13 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:drug_flow/core/constants/styles.dart';
+import 'package:drug_flow/features/Home_sction/cart/data/cart_response.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class OrderSummary extends StatelessWidget {
-  const OrderSummary({super.key});
+  const OrderSummary({super.key, required this.cart});
+
+  /// The whole cart object so we can read subTotal, orderFees, total.
+  final CartDataModel cart;
 
   @override
   Widget build(BuildContext context) {
@@ -16,15 +18,13 @@ class OrderSummary extends StatelessWidget {
 
         SizedBox(height: 8.h),
 
-        const SummaryRow(title: "سعر الإجمالي", value: "١٢٠ جنيه مصري"),
+        SummaryRow(title: 'سعر الإجمالي', value: '${cart.subTotal} ج.م'),
 
-        const SummaryRow(title: "رسوم الطلب", value: "٢٠ جنيه مصري"),
+        SummaryRow(title: 'رسوم الطلب', value: '${cart.orderFees} ج.م'),
 
-        const SummaryRow(title: "مبلغ الخصم", value: "-١٠ جنيه مصري"),
-
-        const SummaryRow(
-          title: "السعر النهائي",
-          value: "١٣٠ جنيه مصري",
+        SummaryRow(
+          title: 'السعر النهائي',
+          value: '${cart.total} ج.م',
           isBold: true,
         ),
       ],
@@ -32,6 +32,9 @@ class OrderSummary extends StatelessWidget {
   }
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Reusable row (kept identical to original, no logic change)
+// ─────────────────────────────────────────────────────────────────────────────
 class SummaryRow extends StatelessWidget {
   const SummaryRow({
     super.key,
@@ -56,9 +59,7 @@ class SummaryRow extends StatelessWidget {
                 ? TextStyles.textStyleBold12
                 : TextStyles.textStyleNormal12,
           ),
-
           const Spacer(),
-
           Text(
             value,
             style: isBold

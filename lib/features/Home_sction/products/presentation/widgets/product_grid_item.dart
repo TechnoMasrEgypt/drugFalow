@@ -7,6 +7,7 @@ import 'package:drug_flow/features/Home_sction/products/presentation/widgets/par
 import 'package:drug_flow/features/Home_sction/products/presentation/widgets/product_item.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../core/constants/colors.dart';
 import '../../../../../core/constants/images.dart';
@@ -60,15 +61,30 @@ class ProductGridItem extends StatelessWidget {
               textScaler: TextScaler.linear(1),
             ),
             SizedBox(height: context.height / 90),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                PartitionNameItem(title: "Paracetamol"),
-                SizedBox(width: context.width / 30),
-                PartitionNameItem(title: "Caffeine"),
-              ],
+            Wrap(
+              spacing: 4.w,
+              runSpacing: 2.h,
+              children: productModel!.activeIngredients!
+                  .map(
+                    (ing) => Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 6.w,
+                        vertical: 2.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: colorF7F7F8,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        ing.name ?? "",
+                        style: TextStyles.textStyleNormal10.copyWith(
+                          color: AppColor.partitionNameItemcolor,
+                        ),
+                        textScaler: TextScaler.linear(1),
+                      ),
+                    ),
+                  )
+                  .toList(),
             ),
             SizedBox(height: context.height / 180),
             Row(
@@ -108,46 +124,48 @@ class ProductGridItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  productModel?.price.toString() ?? "٥٨",
+                  productModel?.price ?? "٥٨",
                   style: TextStyles.textStyleNormal16.copyWith(
                     color: color121217,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  textScaler: TextScaler.linear(1),
+                ),
+                horizontalSpace(4),
+                Text(
+                  "ج.م",
+                  style: TextStyles.textStyleNormal11.copyWith(
+                    color: color6C6C89,
                     fontWeight: FontWeight.w600,
                   ),
                   textScaler: TextScaler.linear(1),
                 ),
                 SizedBox(width: context.width / 30),
-                Text(
-                  "جنيه مصري",
-                  style: TextStyles.textStyleNormal11.copyWith(
-                    color: color6C6C89,
-                    fontWeight: FontWeight.w400,
-                  ),
-                  textScaler: TextScaler.linear(1),
-                ),
-                SizedBox(width: context.width / 30),
                 Spacer(),
-
-                // Container(
-                //   padding: EdgeInsets.symmetric(
-                //     horizontal: context.width / 60,
-                //     vertical: context.height / 70,
-                //   ),
-                //   decoration: BoxDecoration(
-                //     borderRadius: BorderRadius.circular(12),
-                //     color: colorFEF0F4,
-                //     border: Border.all(color: colorFBB1C4),
-                //   ),
-                //   child: Text(
-                //     "خصم ٥٢٪",
-                //     style: TextStyles.textStyleNormal11.copyWith(
-                //       color: colorD50B3E,
-                //       fontWeight: FontWeight.w600,
-                //     ),
-                //     textScaler: TextScaler.linear(1),
-                //   ),
-                // ),
+                Container(
+                  width: 76.w,
+                  height: 25.h,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: colorFEF0F4,
+                    border: Border.all(color: colorFBB1C4),
+                  ),
+                  child: Center(
+                    child: Text(
+                      productModel?.discountPercentage == null
+                          ? "خصم 0٪"
+                          : "${productModel?.discountPercentage}% خصم",
+                      style: TextStyles.textStyleNormal11.copyWith(
+                        color: colorD50B3E,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      textScaler: TextScaler.linear(1),
+                    ),
+                  ),
+                ),
               ],
             ),
+            verticalSpace(5),
           ],
         ),
       ),

@@ -1,4 +1,5 @@
 // import 'package:drug_flow/features/home/presentation/screens/home_screen.dart';
+import 'package:drug_flow/features/Home_sction/cart/ui/bloc/cart_cubit.dart';
 import 'package:drug_flow/features/Home_sction/cart/ui/cart_screen.dart';
 import 'package:drug_flow/features/Home_sction/filters/filter_cubit.dart';
 import 'package:drug_flow/features/Home_sction/home/logic/home_cubit.dart';
@@ -31,7 +32,10 @@ List<Widget> screens({BuildContext? context}) => [
     ],
     child: ProductsScreen(),
   ),
-  CartScreen(),
+  MultiBlocProvider(
+    providers: [BlocProvider(create: (context) => CartCubit(sl()))],
+    child: CartScreen(),
+  ),
 
   BlocProvider(
     create: (context) => ProfileCubit(sl())..getProfile(),

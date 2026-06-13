@@ -5,8 +5,14 @@ import 'package:drug_flow/core/constants/styles.dart';
 import 'package:drug_flow/core/utils/helpers.dart';
 import 'package:drug_flow/core/utils/network_images.dart';
 import 'package:drug_flow/core/widgets/custom_button.dart';
+import 'package:drug_flow/features/Home_sction/cart/data/add_to_cart_request.dart';
+import 'package:drug_flow/features/Home_sction/cart/ui/bloc/cart_cubit.dart';
+import 'package:drug_flow/features/Home_sction/cart/ui/bloc/cart_state.dart';
 import 'package:drug_flow/features/Home_sction/home/data/warehouse_details_response.dart';
+import 'package:drug_flow/features/Home_sction/orders/domain/entities/create_order/create_order_params.dart';
+import 'package:drug_flow/features/Home_sction/orders/presentation/cubit/orders/orders_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ProductDetailsScreen extends StatelessWidget {
@@ -222,14 +228,25 @@ class ProductDetailsScreen extends StatelessWidget {
                       ),
 
                       SizedBox(height: 24.h),
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 16.w),
-                        width: double.infinity,
-                        // margin: EdgeInsets.symmetric(horizontal: context.width / 15),
-                        child: CustomButton(
-                          btnTitle: 'شراء الان ',
-                          onPressed: () {},
-                        ),
+                      BlocBuilder<CartCubit, CartState>(
+                        builder: (context, state) {
+                          return Container(
+                            padding: EdgeInsets.symmetric(horizontal: 16.w),
+                            width: double.infinity,
+                            // margin: EdgeInsets.symmetric(horizontal: context.width / 15),
+                            child: CustomButton(
+                              btnTitle: 'شراء الان ',
+                              onPressed: () {
+                                context.read<OrdersCubit>().createOrder(
+                                  CreateOrderParams(
+                                    cartId: product.id!,
+                                    isDrafted: false,
+                                  ),
+                                );
+                              },
+                            ),
+                          );
+                        },
                       ),
                       verticalSpace(8),
                       Container(
@@ -241,7 +258,14 @@ class ProductDetailsScreen extends StatelessWidget {
                           textColor: color121217,
                           borderColor: color121217,
                           btnTitle: 'اضف الي السلة',
-                          onPressed: () {},
+                          onPressed: () {
+                            context.read<CartCubit>().addToCart(
+                              AddToCartRequest(
+                                product_id: product.id.toString(),
+                                quantity: '1',
+                              ),
+                            );
+                          },
                         ),
                       ),
 

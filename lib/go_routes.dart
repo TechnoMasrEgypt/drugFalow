@@ -13,6 +13,7 @@ import 'package:drug_flow/features/Auths/onboarding/presentation/screens/onboard
 import 'package:drug_flow/features/Home_sction/bottom_bar/presentation/cubit/bottom_bar_cubit.dart';
 import 'package:drug_flow/features/Home_sction/bottom_bar/presentation/screens/bottom_bar_screen.dart';
 import 'package:drug_flow/features/Auths/splash/presentation/cubit/splash_cubit.dart';
+import 'package:drug_flow/features/Home_sction/cart/ui/bloc/cart_cubit.dart';
 import 'package:drug_flow/features/Home_sction/cart/ui/product_item.dart';
 import 'package:drug_flow/features/Home_sction/filters/filter_cubit.dart';
 import 'package:drug_flow/features/Home_sction/home/data/warehouse_details_response.dart';
@@ -20,9 +21,11 @@ import 'package:drug_flow/features/Home_sction/home/data/warehouse_response.dart
 import 'package:drug_flow/features/Home_sction/home/logic/home_cubit.dart';
 import 'package:drug_flow/features/Home_sction/home/ui/ware_house_details_screen.dart';
 import 'package:drug_flow/features/Home_sction/notifications/presentation/notification_screen.dart';
+import 'package:drug_flow/features/Home_sction/orders/presentation/cubit/orders/orders_cubit.dart';
 import 'package:drug_flow/features/Home_sction/orders/presentation/screens/order_details_screen.dart';
 import 'package:drug_flow/features/Home_sction/orders/presentation/screens/orders_screen.dart';
 import 'package:drug_flow/features/Home_sction/products/presentation/screens/products_details_screen.dart';
+import 'package:drug_flow/features/Home_sction/profile/presentation/cubit/contact_us/contact_us_cubit.dart';
 import 'package:drug_flow/features/Home_sction/profile/presentation/cubit/coupons/coupons_cubit.dart';
 import 'package:drug_flow/features/Home_sction/profile/presentation/cubit/faqs/faqs_cubit.dart';
 import 'package:drug_flow/features/Home_sction/profile/presentation/cubit/profile/profile_cubit.dart';
@@ -103,30 +106,26 @@ final GoRouter router = GoRouter(
         );
       },
     ),
-   GoRoute(
-  path: personalInfoSc,
-  pageBuilder: (context, state) {
-    final profileCubit = state.extra as ProfileCubit;
+    GoRoute(
+      path: personalInfoSc,
+      pageBuilder: (context, state) {
+        final profileCubit = state.extra as ProfileCubit;
 
-    return CustomTransitionPage(
-      key: state.pageKey,
-      child: MultiBlocProvider(
-        providers: [
-          BlocProvider.value(value: profileCubit),
-          BlocProvider(create: (_) => sl<GovernorateCubit>()),
-        ],
-        child: const PersonalInfo(),
-      ),
-      transitionsBuilder:
-          (context, animation, secondaryAnimation, child) {
-        return FadeTransition(
-          opacity: animation,
-          child: child,
+        return CustomTransitionPage(
+          key: state.pageKey,
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider.value(value: profileCubit),
+              BlocProvider(create: (_) => sl<GovernorateCubit>()),
+            ],
+            child: const PersonalInfo(),
+          ),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(opacity: animation, child: child);
+          },
         );
       },
-    );
-  },
-),
+    ),
     GoRoute(
       path: loginSc,
       pageBuilder: (context, state) => CustomTransitionPage(
@@ -174,13 +173,11 @@ final GoRouter router = GoRouter(
       pageBuilder: (context, state) => CustomTransitionPage(
         key: state.pageKey,
         child: MultiBlocProvider(
-  providers: [
-    BlocProvider(
-      create: (_) => sl<CouponsCubit>()..getCoupons(),
-    ),
-  ],
-  child: CouponsScreen(),
-),
+          providers: [
+            BlocProvider(create: (_) => sl<CouponsCubit>()..getCoupons()),
+          ],
+          child: CouponsScreen(),
+        ),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(opacity: animation, child: child);
         },
@@ -191,9 +188,9 @@ final GoRouter router = GoRouter(
       pageBuilder: (context, state) => CustomTransitionPage(
         key: state.pageKey,
         child: BlocProvider(
-  create: (_) => sl<FaqsCubit>()..getFaqs(),
-  child: FaqsScreen(),
-),
+          create: (_) => sl<FaqsCubit>()..getFaqs(),
+          child: FaqsScreen(),
+        ),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(opacity: animation, child: child);
         },
@@ -203,7 +200,10 @@ final GoRouter router = GoRouter(
       path: contactUsSc,
       pageBuilder: (context, state) => CustomTransitionPage(
         key: state.pageKey,
-        child: ContactUsScreen(),
+        child: BlocProvider(
+          create: (context) => sl<SocialLinksCubit>()..getSocialLinks(),
+          child: ContactUsScreen(),
+        ),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(opacity: animation, child: child);
         },
@@ -262,7 +262,10 @@ final GoRouter router = GoRouter(
       path: ordersSc,
       pageBuilder: (context, state) => CustomTransitionPage(
         key: state.pageKey,
-        child: OrdersScreen(),
+        child: BlocProvider(
+          create: (context) => sl<OrdersCubit>()..getMyOrders(),
+          child: OrdersScreen(),
+        ),
         //  BlocProvider(
         //   create: (context) => sl<BottomBarCubit>(),
         //   child: BottomBarScreen(),
@@ -281,7 +284,13 @@ final GoRouter router = GoRouter(
         return CustomTransitionPage(
           key: state.pageKey,
 
-          child: ProductDetailsScreen(product: data),
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider(create: (context) => sl<CartCubit>()),
+              BlocProvider(create: (context) => sl<OrdersCubit>()),
+            ],
+            child: ProductDetailsScreen(product: data),
+          ),
           //  BlocProvider(
           //   create: (context) => sl<BottomBarCubit>(),
           //   child: BottomBarScreen(),
@@ -308,156 +317,3 @@ final GoRouter router = GoRouter(
     ),
   ],
 );
-
-/*final GoRouter router = GoRouter(
-  navigatorKey: navKey,
-  initialLocation: splash,
-  routes: [
-
-    /// Splash
-    GoRoute(
-      path: splash,
-      pageBuilder: (context, state) => AnimationRoute.fadeTransition(
-        state: state,
-        child: BlocProvider(
-          create: (_) => sl<SplashCubit>(),
-          child: SplashScreen(),
-        ),
-      ),
-    ),
-
-    /// Onboarding
-    GoRoute(
-      path: onboardingSc,
-      pageBuilder: (context, state) => AnimationRoute.fadeTransition(
-        state: state,
-        child: BlocProvider(
-          create: (_) => sl<OnBoardingCubit>(),
-          child: OnBoardingScreen(),
-        ),
-      ),
-    ),
-
-    /// Login
-    GoRoute(
-      path: login,
-      pageBuilder: (context, state) => AnimationRoute.fadeTransition(
-        state: state,
-        child: BlocProvider(
-          create: (_) => sl<LoginCubit>(),
-          child: LoginScreen(),
-        ),
-      ),
-    ),
-
-    /// OTP (with params)
-    GoRoute(
-      path: otpSc,
-      pageBuilder: (context, state) => AnimationRoute.fadeTransition(
-        state: state,
-        child: MultiBlocProvider(
-          providers: [
-            BlocProvider(create: (_) => sl<OtpCubit>()),
-            BlocProvider(create: (_) => sl<ForgotPasswordCubit>()),
-          ],
-          child: OtpScreen(
-            params: state.extra as OtpParams,
-          ),
-        ),
-      ),
-    ),
-
-    /// Bottom Bar
-    GoRoute(
-      path: bottomBarSc,
-      pageBuilder: (context, state) => AnimationRoute.fadeTransition(
-        state: state,
-        child: MultiBlocProvider(
-          providers: [
-            BlocProvider(create: (_) => sl<ProfileCubit>()),
-            BlocProvider(create: (_) => sl<BottomBarCubit>()),
-            BlocProvider(create: (_) => sl<CartCubit>()),
-            BlocProvider(create: (_) => sl<CategoriesCubit>()),
-            BlocProvider(create: (_) => sl<NotificationsCubit>()),
-          ],
-          child: BottomBarScreen(),
-        ),
-      ),
-    ),
-
-    /// Product Details
-    GoRoute(
-      path: productSc,
-      pageBuilder: (context, state) => AnimationRoute.fadeTransition(
-        state: state,
-        child: BlocProvider(
-          create: (_) => sl<ProductCubit>(),
-          child: ProductDetailsScreen(
-            params: state.extra as ProductsParams,
-          ),
-        ),
-      ),
-    ),
-
-    /// Orders
-    GoRoute(
-      path: ordersSc,
-      pageBuilder: (context, state) => AnimationRoute.fadeTransition(
-        state: state,
-        child: BlocProvider(
-          create: (_) => sl<OrdersCubit>(),
-          child: OrdersScreen(),
-        ),
-      ),
-    ),
-
-    /// Order Details
-    GoRoute(
-      path: orderDetailsSc,
-      pageBuilder: (context, state) => AnimationRoute.fadeTransition(
-        state: state,
-        child: BlocProvider(
-          create: (_) => sl<OrderDetailsCubit>(),
-          child: OrderDetailsScreen(
-            params: state.extra as OrdersParams,
-          ),
-        ),
-      ),
-    ),
-
-    /// Cart
-    GoRoute(
-      path: cartSc,
-      pageBuilder: (context, state) => AnimationRoute.fadeTransition(
-        state: state,
-        child: MultiBlocProvider(
-          providers: [
-            BlocProvider.value(
-              value: state.extra as CartCubit,
-            ),
-            BlocProvider(create: (_) => sl<FavouritesCubit>()),
-            BlocProvider(create: (_) => sl<ConfirmOrderCubit>()),
-          ],
-          child: CartScreen(),
-        ),
-      ),
-    ),
-
-    /// Wholesale (your example)
-    GoRoute(
-      path: wholesaleSc,
-      pageBuilder: (context, state) => AnimationRoute.fadeTransition(
-        state: state,
-        child: MultiBlocProvider(
-          providers: [
-            BlocProvider(create: (_) => sl<BottomBarCubit>()),
-            BlocProvider(create: (_) => sl<ShopsCubit>()),
-            BlocProvider(create: (_) => sl<CategoriesCubit>()),
-          ],
-          child: ShopsScreen(type: 'sub'),
-        ),
-      ),
-    ),
-
-  ],
-);*/

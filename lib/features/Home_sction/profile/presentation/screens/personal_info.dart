@@ -72,8 +72,10 @@ class _PersonalInfoState extends State<PersonalInfo> {
                           onPressed: () => Navigator.pop(context),
                           icon: const Icon(Icons.arrow_back),
                         ),
-                        Text("البيانات الشخصية",
-                            style: TextStyles.textStyleBold16),
+                        Text(
+                          "البيانات الشخصية",
+                          style: TextStyles.textStyleBold16,
+                        ),
                         const Spacer(),
                         GestureDetector(
                           onTap: () => context.push(
@@ -91,9 +93,12 @@ class _PersonalInfoState extends State<PersonalInfo> {
                             ),
                             child: Row(
                               children: [
-                                const Icon(Icons.edit, size: 16),
+                                Icon(Icons.edit, size: 16.sp),
                                 horizontalSpace(6),
-                                const Text("تعديل"),
+                                Text(
+                                  "تعديل",
+                                  style: TextStyles.textStyleNormal10,
+                                ),
                               ],
                             ),
                           ),
@@ -106,28 +111,37 @@ class _PersonalInfoState extends State<PersonalInfo> {
                     child: profile == null
                         ? const Center(child: CircularProgressIndicator())
                         : SingleChildScrollView(
-                            padding: EdgeInsets.all(16.w),
+                            padding: EdgeInsets.symmetric(horizontal: 16.w),
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                CircleAvatar(
-                                  radius: 50.r,
-                                  backgroundImage:
-                                      profile.image != null ? NetworkImage(profile.image!) : null,
+                                Center(
+                                  child: CircleAvatar(
+                                    radius: 50.r,
+                                    backgroundImage: profile.image != null
+                                        ? NetworkImage(profile.image!)
+                                        : null,
+                                  ),
                                 ),
 
-                                SizedBox(height: 24.h),
-
+                                // SizedBox(height: 24.h),
                                 _InfoField("اسم الصيدلية", profile.name),
                                 _InfoField("البريد الإلكتروني", profile.email),
                                 _InfoField("رقم الهاتف", profile.phone),
                                 _InfoField("رقم آخر", profile.secondPhone),
                                 _InfoField("الهاتف الأرضي", profile.landline),
-                                _InfoField("كود الصيدلية", profile.pharmacyCode),
+                                _InfoField(
+                                  "كود الصيدلية",
+                                  profile.pharmacyCode,
+                                ),
                                 _InfoField("المحافظة", profile.governorate),
                                 _InfoField("المدينة", profile.city),
                                 _InfoField("المنطقة", profile.area),
-                                _InfoField("العنوان", profile.address, maxLines: 3),
+                                _InfoField(
+                                  "العنوان",
+                                  profile.address,
+                                  maxLines: 3,
+                                ),
 
                                 SizedBox(height: 30.h),
 
@@ -179,7 +193,11 @@ class _PersonalInfoState extends State<PersonalInfo> {
               Container(width: 40, height: 4, color: Colors.grey[300]),
               SizedBox(height: 20.h),
 
-              const Icon(Icons.delete_forever, color: Color(0xffF53D6B), size: 50),
+              const Icon(
+                Icons.delete_forever,
+                color: Color(0xffF53D6B),
+                size: 50,
+              ),
 
               SizedBox(height: 10.h),
               const Text("هل أنت متأكد من حذف الحساب؟"),
@@ -208,7 +226,7 @@ class _PersonalInfoState extends State<PersonalInfo> {
                     ),
                   ),
                 ],
-              )
+              ),
             ],
           ),
         );
@@ -232,7 +250,7 @@ class _InfoField extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(bottom: 14.h),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(label, style: const TextStyle(color: Colors.grey)),
           SizedBox(height: 6.h),

@@ -1,318 +1,233 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:drug_flow/core/constants/colors.dart';
-import 'package:drug_flow/core/constants/images.dart';
-import 'package:drug_flow/core/constants/screens.dart';
-import 'package:drug_flow/core/constants/spacing.dart';
 import 'package:drug_flow/core/constants/styles.dart';
-import 'package:drug_flow/core/utils/network_images.dart';
-import 'package:drug_flow/core/widgets/custom_button.dart';
+import 'package:drug_flow/features/Home_sction/cart/data/cart_response.dart';
+import 'package:drug_flow/features/Home_sction/cart/data/update_cart_item_request.dart';
+import 'package:drug_flow/features/Home_sction/cart/ui/bloc/cart_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 
-class ProductItem extends StatelessWidget {
-  const ProductItem({super.key, required this.onTap});
+class ProductItem extends StatefulWidget {
+  const ProductItem({
+    super.key,
+    required this.item,
+    required this.onTap,
+    required this.isdrafted,
+  });
 
+  final CartItemModel item;
   final VoidCallback onTap;
+  final bool isdrafted;
+  @override
+  State<ProductItem> createState() => _ProductItemState();
+}
+
+class _ProductItemState extends State<ProductItem> {
+ void _changeQuantity(int delta) {
+  final next = widget.item.quantity + delta;
+
+  if (next < 1) return;
+
+  context.read<CartCubit>().updateCartItem(
+    isDrafted: widget.isdrafted,
+    id: widget.item.id,
+    body: UpdateCartItemRequest(
+      quantity: next,
+      product_id: widget.item.productId,
+    ),
+  );
+}
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: .center,
-          // crossAxisAlignment: .start,
-          children: [
-            AppImage(image: ware2, height: 52.h, width: 60.w),
-            horizontalSpace(8),
-            Text(
-              "الريان فارم للتجارة ",
-              style: TextStyles.textStyleNormal20.copyWith(color: color6C6C89),
-            ),
-          ],
-        ),
-        verticalSpace(10),
-        InkWell(
-          onTap: onTap,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8.r),
-                child: Image.asset(
-                  panadol,
-                  width: 100.w,
-                  height: 110.h,
-                  fit: BoxFit.cover,
+    final product = widget.item.product;
+
+    return GestureDetector(
+      onTap: widget.onTap,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // ── Product image ──────────────────────────────────────────────
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8.r),
+            child: CachedNetworkImage(
+              imageUrl: product?.image ?? "",
+              width: 80.w,
+              height: 80.h,
+              fit: BoxFit.fill,
+              placeholder: (_, __) => Container(
+                color: Colors.grey.shade100,
+                child: const Center(
+                  child: CircularProgressIndicator(strokeWidth: 2),
                 ),
               ),
+              errorWidget: (_, __, ___) => Container(
+                color: Colors.grey.shade100,
+                child: Icon(Icons.medication, size: 36.r, color: Colors.grey),
+              ),
+            ),
+          ),
 
-              SizedBox(width: 8.w),
+          SizedBox(width: 10.w),
 
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+          // ── Details ────────────────────────────────────────────────────
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Name
+                Text(
+                  product?.name ?? "",
+                  style: TextStyles.textStyleBold13,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+
+                SizedBox(height: 4.h),
+
+                // Active ingredients chips
+                if (product.activeIngredients.isNotEmpty)
+                  Wrap(
+                    spacing: 4.w,
+                    runSpacing: 2.h,
+                    children: product.activeIngredients
+                        .map(
+                          (ing) => Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 6.w,
+                              vertical: 2.h,
+                            ),
+                            decoration: BoxDecoration(
+                              color: colorF7F7F8,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              ing.name,
+                              style: TextStyles.textStyleNormal10.copyWith(
+                                color: AppColor.partitionNameItemcolor,
+                              ),
+                              textScaler: TextScaler.linear(1),
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  ),
+
+                SizedBox(height: 6.h),
+
+                // Prices row
+                Row(
                   children: [
+                    // Current price
                     Text(
-                      "بانادول اكسترا بانادولرين اضافي، مسكن فعال للألم والحمي | 24 قرص",
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyles.textStyleBold11.copyWith(
-                        color: const Color(0xff303030),
+                      '${product.price}ج.م',
+                      style: TextStyles.textStyleBold13.copyWith(
+                        color: const Color.fromARGB(255, 0, 0, 0),
                       ),
                     ),
 
-                    SizedBox(height: 8.h),
+                    SizedBox(width: 8.w),
 
-                    Row(
-                      children: [
-                        Text(
-                          "٥٨",
-                          style: TextStyles.textStyleBold12.copyWith(
-                            color: const Color(0xff303030),
-                          ),
-                        ),
-
-                        horizontalSpace(4),
-
-                        Text(
-                          "جنيه مصري",
-                          style: TextStyles.textStyleNormal10.copyWith(
-                            color: const Color(0xff999999),
-                          ),
-                        ),
-
-                        horizontalSpace(4),
-
-                        Text(
-                          "١٢٠ جنيه مصري",
-                          style: TextStyles.textStyleNormal10.copyWith(
-                            color: const Color(0xff999999),
-                            decoration: TextDecoration.lineThrough,
-                          ),
-                        ),
-
-                        horizontalSpace(6),
-                        Spacer(),
-                        Container(
-                          width: 60.w,
-                          height: 40.h,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 8.w,
-                            vertical: 2.h,
-                          ),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Color(0xffFEF0F4)),
-                            color: const Color(0xffFEF0F4),
-                            borderRadius: BorderRadius.circular(8.r),
-                          ),
-                          child: Center(
-                            child: Text(
-                              "خصم ٥٢٪",
-                              style: TextStyles.textStyleBold10.copyWith(
-                                color: const Color(0xffD50B3E),
-                                fontSize: 9.sp,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
+                    // Original price (strikethrough)
+                    Text(
+                      '${product.priceBeforeDiscount} ج.م',
+                      style: TextStyles.textStyleNormal11.copyWith(
+                        color: Colors.grey,
+                        decoration: TextDecoration.lineThrough,
+                      ),
                     ),
+                    Spacer(),
 
-                    SizedBox(height: 10.h),
-
-                    Center(
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 100.w,
-                            height: 40.h,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: const Color(0xffE5E5E5),
-                              ),
-                              borderRadius: BorderRadius.circular(6.r),
-                            ),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Center(
-                                    child: Icon(Icons.remove, size: 12.sp),
-                                  ),
-                                ),
-
-                                Container(
-                                  width: 1,
-                                  color: const Color(0xffE5E5E5),
-                                ),
-
-                                Expanded(
-                                  child: Center(
-                                    child: Text(
-                                      "2",
-                                      style: TextStyles.textStyleNormal11,
-                                    ),
-                                  ),
-                                ),
-
-                                Container(
-                                  width: 1,
-                                  color: const Color(0xffE5E5E5),
-                                ),
-
-                                Expanded(
-                                  child: Center(
-                                    child: Icon(Icons.add, size: 12.sp),
-                                  ),
-                                ),
-                              ],
-                            ),
+                    // Discount badge
+                    Container(
+                      width: 70.w,
+                      height: 25.h,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: colorFEF0F4,
+                        border: Border.all(color: colorFBB1C4),
+                      ),
+                      child: Center(
+                        child: Text(
+                          '${product.discountPercentage.toStringAsFixed(0)}%',
+                          style: TextStyles.textStyleNormal11.copyWith(
+                            color: Colors.red,
+                            fontWeight: FontWeight.bold,
                           ),
-
-                          const Spacer(),
-
-                          Container(
-                            // padding: EdgeInsets.symmetric(horizontal: 16.w),
-                            width: 60.w,
-                            // margin: EdgeInsets.symmetric(horizontal: context.width / 15),
-                            child: CustomButton(
-                              btnTitle: 'نقل',
-                              onPressed: () {
-                                _showSortBottomSheet(context);
-                                // context.push(ordersSc);
-                              },
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
                     ),
                   ],
                 ),
-              ),
-            ],
+
+                SizedBox(height: 4.h),
+                Row(
+                  children: [
+                    _StepperButton(
+                      icon: Icons.remove,
+                      onTap: () => _changeQuantity(-1),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 12.w),
+                      child: Text(
+                        '${widget.item.quantity}',
+                        style: TextStyles.textStyleBold13,
+                      ),
+                    ),
+                    _StepperButton(
+                      icon: Icons.add,
+                      onTap: () => _changeQuantity(1),
+                    ),
+                    SizedBox(width: 10.w),
+                    IconButton(
+                      onPressed: () {
+                        context.read<CartCubit>().deleteCartItem(
+                          id: widget.item.id,
+                          isDrafted: widget.isdrafted,
+                        );
+                      },
+                      icon: Icon(Icons.delete, color: Colors.red),
+                    ),
+                    // const Spacer(),
+
+                    // Total price (reactive to local quantity)
+                    Text(
+                      '${widget.item.totalPrice} ج.م',
+                      style: TextStyles.textStyleBold12,
+                    ),
+                  ],
+                ),
+
+                // Quantity & total price
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
 
-void _showSortBottomSheet(BuildContext context) {
-  showModalBottomSheet(
-    context: context,
-    backgroundColor: white,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-    ),
-    builder: (_) => const _SortBottomSheet(),
-  );
-}
+//──────────────────────────────────────────────────────────────────────────
+class _StepperButton extends StatelessWidget {
+  const _StepperButton({required this.icon, required this.onTap});
 
-class _SortBottomSheet extends StatefulWidget {
-  const _SortBottomSheet();
-
-  @override
-  State<_SortBottomSheet> createState() => _SortBottomSheetState();
-}
-
-class _SortBottomSheetState extends State<_SortBottomSheet> {
-  int _selected = 1; // default: price high → low
-
-  final List<String> _options = [
-    "إيفا فارما",
-    "أمون للأدوية",
-    "راميدا",
-    "سيديكو",
-  ];
+  final IconData icon;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Handle
-          Container(
-            width: 40.w,
-            height: 4.h,
-            margin: EdgeInsets.only(bottom: 16.h),
-            decoration: BoxDecoration(
-              color: color121217.withOpacity(.15),
-              borderRadius: BorderRadius.circular(4),
-            ),
-          ),
-          // Title
-          Align(
-            alignment: Alignment.centerRight,
-            child: Text(
-              "اختر الشركة",
-              style: TextStyles.textStyleBold20.copyWith(color: color121217),
-              textScaler: TextScaler.linear(1),
-            ),
-          ),
-          SizedBox(height: 12.h),
-          // Radio options
-          ..._options.asMap().entries.map((entry) {
-            final i = entry.key;
-            final label = entry.value;
-            return InkWell(
-              onTap: () => setState(() => _selected = i),
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 10.h),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // Radio circle
-                    AnimatedContainer(
-                      duration: const Duration(milliseconds: 180),
-                      width: 20.w,
-                      height: 20.h,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: _selected == i
-                              ? primaryDark
-                              : color121217.withOpacity(.3),
-                          width: _selected == i ? 5 : 1.5,
-                        ),
-                      ),
-                    ),
-                    // Label
-                    Text(
-                      label,
-                      style: TextStyles.textStyleNormal14.copyWith(
-                        color: color121217,
-                      ),
-                      textScaler: TextScaler.linear(1),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          }),
-          SizedBox(height: 12.h),
-          // Apply button
-          SizedBox(
-            width: double.infinity,
-            height: 44.h,
-            child: ElevatedButton(
-              onPressed: () => Navigator.pop(context),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: primaryDark,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                elevation: 0,
-              ),
-              child: Text(
-                "تطبيق",
-                style: TextStyles.textStyleBold20.copyWith(color: white),
-                textScaler: TextScaler.linear(1),
-              ),
-            ),
-          ),
-          SizedBox(height: 8.h),
-        ],
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 28.w,
+        height: 28.h,
+        decoration: BoxDecoration(
+          color: AppColor.textPrimary,
+          borderRadius: BorderRadius.circular(6.r),
+        ),
+        child: Icon(icon, color: Colors.white, size: 16.r),
       ),
     );
   }

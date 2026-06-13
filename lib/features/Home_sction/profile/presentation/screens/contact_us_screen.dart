@@ -2,6 +2,7 @@ import 'package:drug_flow/core/constants/colors.dart';
 import 'package:drug_flow/core/constants/images.dart';
 import 'package:drug_flow/core/constants/styles.dart';
 import 'package:drug_flow/core/utils/network_images.dart';
+import 'package:drug_flow/features/Home_sction/profile/data/contact_request.dart';
 import 'package:drug_flow/features/Home_sction/profile/presentation/cubit/contact_us/contact_us_cubit.dart';
 import 'package:drug_flow/features/Home_sction/profile/presentation/cubit/contact_us/contact_us_state.dart';
 import 'package:flutter/material.dart';
@@ -21,10 +22,12 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
     return BlocBuilder<SocialLinksCubit, SocialLinksState>(
       builder: (context, state) {
         var cubit = context.read<SocialLinksCubit>();
-          if (state is! SocialLinksSuccess) {
-      return const SizedBox();
-    }
-    final links = state.data;
+        if (state is! SocialLinksSuccess) {
+          return Scaffold(
+            body: Center(child: CircularProgressIndicator(color: primaryDark)),
+          );
+        }
+        final links = state.data;
 
         return Scaffold(
           backgroundColor: Colors.white,
@@ -134,7 +137,16 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                       width: double.infinity,
                       height: 50.h,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          context.read<SocialLinksCubit>().contactUs(
+                            ContactRequest(
+                              name: cubit.nameController.text,
+                              phone: cubit.phoneController.text,
+                              email: cubit.emailController.text,
+                              message: cubit.messageController.text,
+                            ),
+                          );
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: primaryDark,
                           shape: RoundedRectangleBorder(
@@ -169,14 +181,24 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         _buildSocialIcon(
-                          onTap:  () => cubit.openLink(links.linkedin!),
-                          child: _LinkedInIcon()),
+                          onTap: () => cubit.openLink(links.linkedin!),
+                          child: _LinkedInIcon(),
+                        ),
                         SizedBox(width: 12.w),
-                        _buildSocialIcon(onTap:  () => cubit.openLink(links.twitter!),child: _XIcon()),
+                        _buildSocialIcon(
+                          onTap: () => cubit.openLink(links.twitter!),
+                          child: _XIcon(),
+                        ),
                         SizedBox(width: 12.w),
-                        _buildSocialIcon(onTap:  () => cubit.openLink(links.youtube!),child: _YouTubeIcon()),
+                        _buildSocialIcon(
+                          onTap: () => cubit.openLink(links.youtube!),
+                          child: _YouTubeIcon(),
+                        ),
                         SizedBox(width: 12.w),
-                        _buildSocialIcon(onTap:  () => cubit.openLink(links.facebook!),child: _FacebookIcon()),
+                        _buildSocialIcon(
+                          onTap: () => cubit.openLink(links.facebook!),
+                          child: _FacebookIcon(),
+                        ),
                       ],
                     ),
 
@@ -186,13 +208,25 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        _buildSocialIcon(onTap:  () => cubit.openLink(links.whatsapp!),child: _TikTokIcon()),
+                        _buildSocialIcon(
+                          onTap: () => cubit.openLink(links.whatsapp!),
+                          child: _TikTokIcon(),
+                        ),
                         SizedBox(width: 12.w),
-                        _buildSocialIcon(onTap:  () => cubit.openLink(links.whatsapp!),child: _WhatsAppIcon()),
+                        _buildSocialIcon(
+                          onTap: () => cubit.openLink(links.whatsapp!),
+                          child: _WhatsAppIcon(),
+                        ),
                         SizedBox(width: 12.w),
-                        _buildSocialIcon(onTap:  () => cubit.openLink(links.instagram!),child: _InstagramIcon()),
+                        _buildSocialIcon(
+                          onTap: () => cubit.openLink(links.instagram!),
+                          child: _InstagramIcon(),
+                        ),
                         SizedBox(width: 12.w),
-                        _buildSocialIcon(onTap:  () => cubit.openLink(links.whatsapp!),child: _TelegramIcon()),
+                        _buildSocialIcon(
+                          onTap: () => cubit.openLink(links.whatsapp!),
+                          child: _TelegramIcon(),
+                        ),
                       ],
                     ),
 
@@ -302,9 +336,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
     );
   }
 
-  Widget _buildSocialIcon({ 
-    required Function() onTap,
-    required Widget child}) {
+  Widget _buildSocialIcon({required Function() onTap, required Widget child}) {
     return InkWell(
       onTap: onTap,
       // child: Container(

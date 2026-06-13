@@ -6,6 +6,43 @@ part of 'warehouse_details_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+WarehouseDetailsResponse _$WarehouseDetailsResponseFromJson(
+  Map<String, dynamic> json,
+) => WarehouseDetailsResponse(
+  success: json['success'] as bool?,
+  message: json['message'] as String?,
+  extra: json['extra'] == null
+      ? null
+      : ExtraModel.fromJson(json['extra'] as Map<String, dynamic>),
+  items: (json['items'] as List<dynamic>?)
+      ?.map((e) => ProductModel.fromJson(e as Map<String, dynamic>))
+      .toList(),
+  meta: json['meta'] == null
+      ? null
+      : MetaModel.fromJson(json['meta'] as Map<String, dynamic>),
+);
+
+Map<String, dynamic> _$WarehouseDetailsResponseToJson(
+  WarehouseDetailsResponse instance,
+) => <String, dynamic>{
+  'success': instance.success,
+  'message': instance.message,
+  'extra': instance.extra?.toJson(),
+  'items': instance.items?.map((e) => e.toJson()).toList(),
+  'meta': instance.meta?.toJson(),
+};
+
+ExtraModel _$ExtraModelFromJson(Map<String, dynamic> json) => ExtraModel(
+  warehouse: json['warehouse'] == null
+      ? null
+      : WarehouseDetailsData.fromJson(
+          json['warehouse'] as Map<String, dynamic>,
+        ),
+);
+
+Map<String, dynamic> _$ExtraModelToJson(ExtraModel instance) =>
+    <String, dynamic>{'warehouse': instance.warehouse?.toJson()};
+
 WarehouseDetailsData _$WarehouseDetailsDataFromJson(
   Map<String, dynamic> json,
 ) => WarehouseDetailsData(
@@ -49,27 +86,9 @@ Map<String, dynamic> _$WarehouseDetailsDataToJson(
   'working_times': instance.workingTimes,
   'minimum_purchase': instance.minimumPurchase,
   'order_fees': instance.orderFees,
-  'governorates': instance.governorates,
-  'cities': instance.cities,
-  'areas': instance.areas,
-};
-
-MetaModel _$MetaModelFromJson(Map<String, dynamic> json) => MetaModel(
-  currentPage: (json['current_page'] as num?)?.toInt(),
-  lastPage: (json['last_page'] as num?)?.toInt(),
-  perPage: (json['per_page'] as num?)?.toInt(),
-  total: (json['total'] as num?)?.toInt(),
-  nextPageUrl: json['next_page_url'] as String?,
-  prevPageUrl: json['prev_page_url'] as String?,
-);
-
-Map<String, dynamic> _$MetaModelToJson(MetaModel instance) => <String, dynamic>{
-  'current_page': instance.currentPage,
-  'last_page': instance.lastPage,
-  'per_page': instance.perPage,
-  'total': instance.total,
-  'next_page_url': instance.nextPageUrl,
-  'prev_page_url': instance.prevPageUrl,
+  'governorates': instance.governorates?.map((e) => e.toJson()).toList(),
+  'cities': instance.cities?.map((e) => e.toJson()).toList(),
+  'areas': instance.areas?.map((e) => e.toJson()).toList(),
 };
 
 GovernorateModel _$GovernorateModelFromJson(Map<String, dynamic> json) =>
@@ -106,6 +125,8 @@ ProductModel _$ProductModelFromJson(Map<String, dynamic> json) => ProductModel(
   name: json['name'] as String?,
   image: json['image'] as String?,
   price: json['price'] as String?,
+  priceBeforeDiscount: json['price_before_discount'] as String?,
+  discountPercentage: json['discount_percentage'] as num?,
   category: json['category'] as String?,
   activeIngredients: (json['active_ingredients'] as List<dynamic>?)
       ?.map((e) => ActiveIngredientModel.fromJson(e as Map<String, dynamic>))
@@ -123,9 +144,13 @@ Map<String, dynamic> _$ProductModelToJson(ProductModel instance) =>
       'name': instance.name,
       'image': instance.image,
       'price': instance.price,
+      'price_before_discount': instance.priceBeforeDiscount,
+      'discount_percentage': instance.discountPercentage,
       'category': instance.category,
-      'active_ingredients': instance.activeIngredients,
-      'warehouse': instance.warehouse,
+      'active_ingredients': instance.activeIngredients
+          ?.map((e) => e.toJson())
+          .toList(),
+      'warehouse': instance.warehouse?.toJson(),
     };
 
 ActiveIngredientModel _$ActiveIngredientModelFromJson(
@@ -153,4 +178,22 @@ Map<String, dynamic> _$ProductWarehouseModelToJson(
   'id': instance.id,
   'name': instance.name,
   'logo': instance.logo,
+};
+
+MetaModel _$MetaModelFromJson(Map<String, dynamic> json) => MetaModel(
+  currentPage: (json['current_page'] as num?)?.toInt(),
+  lastPage: (json['last_page'] as num?)?.toInt(),
+  perPage: (json['per_page'] as num?)?.toInt(),
+  total: (json['total'] as num?)?.toInt(),
+  nextPageUrl: json['next_page_url'] as String?,
+  prevPageUrl: json['prev_page_url'] as String?,
+);
+
+Map<String, dynamic> _$MetaModelToJson(MetaModel instance) => <String, dynamic>{
+  'current_page': instance.currentPage,
+  'last_page': instance.lastPage,
+  'per_page': instance.perPage,
+  'total': instance.total,
+  'next_page_url': instance.nextPageUrl,
+  'prev_page_url': instance.prevPageUrl,
 };

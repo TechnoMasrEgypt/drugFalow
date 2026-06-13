@@ -1,4 +1,11 @@
 import 'dart:io';
+import 'package:drug_flow/core/constants/images.dart';
+import 'package:drug_flow/core/localization/lang_keys.dart';
+import 'package:drug_flow/core/utils/helpers.dart';
+import 'package:drug_flow/core/widgets/custom_text_field.dart';
+import 'package:drug_flow/features/Auths/auth/presentation/widgets/address_text_field.dart';
+import 'package:drug_flow/features/Auths/auth/presentation/widgets/intl_phone_form_field.dart';
+import 'package:drug_flow/features/Auths/register/ui/location_drop_down_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -97,34 +104,124 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
                   GestureDetector(
                     onTap: () => pickImage(true),
-                    child: Container(
-                      height: 120.h,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: colorF7F7F8,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Center(
-                        child: Text(
-                          selectedLicense != null
-                              ? "تم اختيار رخصة"
-                              : "اضغط لرفع الرخصة",
-                        ),
-                      ),
+                    child: CircleAvatar(
+                      radius: 50.r,
+                      backgroundColor: colorF7F7F8,
+                      backgroundImage: selectedLicense != null
+                          ? FileImage(selectedLicense!)
+                          : (cubit.profile?.licenseFile != null
+                                    ? NetworkImage(cubit.profile!.licenseFile!)
+                                    : null)
+                                as ImageProvider?,
                     ),
                   ),
 
                   SizedBox(height: 20.h),
 
-                  /// ================= FIELDS =================
-                  _field(cubit.pharmacyController, "اسم الصيدلية"),
-                  _field(cubit.mailController, "الإيميل"),
-                  _field(cubit.phoneController, "الهاتف"),
-                  _field(cubit.secondPhoneController, "هاتف آخر"),
-                  _field(cubit.landlineController, "أرضي"),
-                  _field(cubit.addressController, "العنوان"),
+                  // ── Pharmacy name ──
+                  CustomTextField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty || value.length < 4) {
+                        return context.translate(LangKeys.validPharmacyName);
+                      }
+                      return null;
+                    },
+                    controller: cubit.pharmacyController,
+                    obscure: false,
+                    hintTxt: context.translate(LangKeys.pharmacyName),
+                    svgIcon: pharmacy,
+                    textInputType: TextInputType.text,
+                    title: context.translate(LangKeys.pharmacyName),
+                  ),
+                  SizedBox(height: context.height / 30),
 
-                  SizedBox(height: 30.h),
+                  // ── Email ──
+                  CustomTextField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty || value.length < 4) {
+                        return context.translate(LangKeys.validEmail);
+                      }
+                      return null;
+                    },
+                    controller: cubit.mailController,
+                    obscure: false,
+                    hintTxt: 'example@mail.com',
+                    svgIcon: mail,
+                    textInputType: TextInputType.emailAddress,
+                    title: context.translate(LangKeys.email),
+                  ),
+                  SizedBox(height: context.height / 30),
+
+                  // ── Phone (required) ──
+                  IntlPhoneFormField(
+                    countryCodeController: cubit.countryCodeController,
+                    controller: cubit.phoneController,
+                    hintTxt: '1012345678',
+                    type: 'phone',
+                    obscure: false,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return context.translate(LangKeys.validPhoneNumber);
+                      }
+                      return null;
+                    },
+                    textInputType: TextInputType.number,
+                    title: context.translate(LangKeys.phone),
+                  ),
+                  SizedBox(height: context.height / 40),
+
+                  // ── Second phone (optional) ──
+                  IntlPhoneFormField(
+                    countryCodeController: cubit.countryCode2Controller,
+                    controller: cubit.secondPhoneController,
+                    hintTxt: '1012345678',
+                    type: 'phone',
+                    obscure: false,
+                    validator: (_) => null,
+                    textInputType: TextInputType.number,
+                    title: context.translate(LangKeys.anotherPhoneNumber),
+                  ),
+                  SizedBox(height: context.height / 40),
+
+                  // ── Landline (optional) ──
+                  IntlPhoneFormField(
+                    countryCodeController: cubit.countryCode3Controller,
+                    controller: cubit.landlineController,
+                    hintTxt: '0212345678',
+                    type: 'phone',
+                    obscure: false,
+                    validator: (_) => null,
+                    textInputType: TextInputType.number,
+                    title: context.translate(LangKeys.landlinePhone),
+                  ),
+                  SizedBox(height: context.height / 50),
+
+                  // ── Governorate ──
+                  const GovernorateDropDown(),
+                  SizedBox(height: context.height / 35),
+
+                  // ── City ──
+                  CityDropDown(),
+                  SizedBox(height: context.height / 35),
+
+                  // ── Area ──
+                  const AreaDropDown(),
+                  SizedBox(height: context.height / 30),
+
+                  // ── Detailed address ──
+                  AddressTextField(
+                    controller: cubit.addressController,
+                    obscure: false,
+                    hintTxt: context.translate(
+                      LangKeys.streetBuildingPlaceholder,
+                    ),
+                    maxLines: 5,
+                    type: 'address',
+                    textInputType: TextInputType.text,
+                    title: context.translate(LangKeys.detailedAddress),
+                    svgIcon: '',
+                  ),
+                  SizedBox(height: context.height / 30),
 
                   /// ================= BUTTON =================
                   SizedBox(
@@ -135,10 +232,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         backgroundColor: const Color(0xff4A90E2),
                       ),
                       onPressed: isLoading
-                          ? null 
+                          ? null
                           : () {
                               context.read<ProfileCubit>().updateProfile(
                                 UpdateProfileRequestBody(
+                                  areaId: "1",
+                                  cityId: "1",
+                                  governorateId: "1",
                                   name: cubit.pharmacyController.text,
                                   email: cubit.mailController.text,
                                   phone: cubit.phoneController.text,
@@ -163,16 +263,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
           );
         },
-      ),
-    );
-  }
-
-  Widget _field(TextEditingController c, String label) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 12.h),
-      child: TextField(
-        controller: c,
-        decoration: InputDecoration(labelText: label),
       ),
     );
   }
