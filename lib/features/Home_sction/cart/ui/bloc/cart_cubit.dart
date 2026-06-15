@@ -16,13 +16,17 @@ class CartCubit extends Cubit<CartState> {
   final CartRepos _repo;
 
   CartCubit(this._repo) : super(const CartState.initial());
-List<CartItemModel>? cartItemModel;  CartResponseModel? cartResponse;
+  List<CartItemModel>? cartItemModel;
+  CartResponseModel? cartResponse;
 
   // ─────────────────────────────────────────────
   // GET CART
   // ─────────────────────────────────────────────
-  Future<void> getMyCart({required bool isDrafted, bool showLoading = true}) async {
-     if (showLoading) emit(const CartState.loading());
+  Future<void> getMyCart({
+    required bool isDrafted,
+    bool showLoading = true,
+  }) async {
+    if (showLoading) emit(const CartState.loading());
 
     final result = await _repo.getMyCart(isDrafted: isDrafted);
 
@@ -64,9 +68,11 @@ List<CartItemModel>? cartItemModel;  CartResponseModel? cartResponse;
         );
       },
     );
-  }CartItemModel getItemById(int id) {
-  return cartItemModel!.firstWhere((e) => e.productId == id);
-}
+  }
+
+  CartItemModel getItemById(int id) {
+    return cartItemModel!.firstWhere((e) => e.productId == id);
+  }
 
   // ─────────────────────────────────────────────
   // UPDATE ITEM
@@ -185,36 +191,36 @@ List<CartItemModel>? cartItemModel;  CartResponseModel? cartResponse;
       },
     );
   }
+
   Future<void> swapWarehouse({
-  required int medicineId,
-  required int oldWarehouseId,
-  required int productId,
-  required int newWarehouseId,
-  required bool isDrafted,
-}) async {
+    required int medicineId,
+    required int oldWarehouseId,
+    required int productId,
+    required int newWarehouseId,
+    required bool isDrafted,
+  }) async {
     emit(const CartState.updating());
 
-  final result = await _repo.swapWarehouse(
-    SwapWarehouseRequest(
-      medicineId: medicineId,
-      oldWarehouseId: oldWarehouseId,
-      productId: productId,
-      newWarehouseId: newWarehouseId,
-    ),
-  );
+    final result = await _repo.swapWarehouse(
+      SwapWarehouseRequest(
+        medicineId: medicineId,
+        oldWarehouseId: oldWarehouseId,
+        productId: productId,
+        newWarehouseId: newWarehouseId,
+      ),
+    );
 
-  result.when(
-    success: (_) async {
-      await getMyCart(isDrafted: isDrafted, showLoading: false);
-      
-    },
-    failure: (error) {
-      emit(
-        CartState.error(
-          error.apiErrorModel.message ?? "Something went wrong",
-        ),
-      );
-    },
-  );
-}
+    result.when(
+      success: (_) async {
+        await getMyCart(isDrafted: isDrafted, showLoading: false);
+      },
+      failure: (error) {
+        emit(
+          CartState.error(
+            error.apiErrorModel.message ?? "Something went wrong",
+          ),
+        );
+      },
+    );
+  }
 }

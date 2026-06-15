@@ -138,11 +138,6 @@ class _CartScreenState extends State<CartScreen> {
                   return _buildCartList(carts);
                 }
 
-                // ⚪ fallback: show cached data for updating / intermediate states
-                final cached = context.read<CartCubit>().cartResponse?.data;
-                if (cached != null) {
-                  return _buildCartList(cached);
-                }
 
                 return const SizedBox.shrink();
               },

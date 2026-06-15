@@ -92,243 +92,248 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   margin: EdgeInsets.symmetric(horizontal: context.width / 20),
                   child: Form(
                     key: cubit.formKey,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: context.height / 30),
-                        OnboardingAppBar(showBackButton: true),
-                        SizedBox(height: context.height / 30),
-
-                        // ── Title ──
-                        Text(
-                          context.translate(LangKeys.welcomeToDrugFlow),
-                          style: TextStyles.textStyleBold24.copyWith(
-                            color: color121217,
-                          ),
-                          textScaler: TextScaler.linear(1),
-                        ),
-                        SizedBox(height: context.height / 30),
-
-                        // ── Subtitle ──
-                        Text(
-                          context.translate(LangKeys.pharmacyInfoMessage),
-                          style: TextStyles.textStyleNormal12.copyWith(
-                            color: color6C6C89,
-                          ),
-                          textScaler: TextScaler.linear(1),
-                        ),
-                        SizedBox(height: context.height / 30),
-
-                        // ── Pharmacy image ──
-                        UploadItemWidget(
-                          onTap: _pickPharmacyImage,
-                          img: camera,
-                          title: context.translate(LangKeys.pharmacyImage),
-                          description: context.translate(
-                            LangKeys.uploadPharmacyImageHint,
-                          ),
-                        ),
-                        if (selectedImage != null) ...[
-                          SizedBox(height: context.height / 60),
-                          _SelectedImagePreview(file: selectedImage!),
-                        ],
-                        SizedBox(height: context.height / 30),
-
-                        // ── License image ──
-                        UploadItemWidget(
-                          onTap: _pickLicenseImage,
-                          img: camera,
-                          title: context.translate(LangKeys.licenseImage),
-                          description: context.translate(
-                            LangKeys.uploadLicenseImageHint,
-                          ),
-                        ),
-                        if (selectedImage2 != null) ...[
-                          SizedBox(height: context.height / 60),
-                          _SelectedImagePreview(file: selectedImage2!),
-                        ],
-                        SizedBox(height: context.height / 30),
-
-                        // ── Pharmacy name ──
-                        CustomTextField(
-                          validator: (value) {
-                            if (value == null ||
-                                value.isEmpty ||
-                                value.length < 4) {
-                              return context.translate(
-                                LangKeys.validPharmacyName,
-                              );
-                            }
-                            return null;
-                          },
-                          controller: cubit.pharmacyController,
-                          obscure: false,
-                          hintTxt: context.translate(LangKeys.pharmacyName),
-                          svgIcon: pharmacy,
-                          textInputType: TextInputType.text,
-                          title: context.translate(LangKeys.pharmacyName),
-                        ),
-                        SizedBox(height: context.height / 30),
-
-                        // ── Email ──
-                        CustomTextField(
-                          validator: (value) {
-                            if (value == null ||
-                                value.isEmpty ||
-                                value.length < 4) {
-                              return context.translate(LangKeys.validEmail);
-                            }
-                            return null;
-                          },
-                          controller: cubit.mailController,
-                          obscure: false,
-                          hintTxt: 'example@mail.com',
-                          svgIcon: mail,
-                          textInputType: TextInputType.emailAddress,
-                          title: context.translate(LangKeys.email),
-                        ),
-                        SizedBox(height: context.height / 30),
-
-                        // ── Phone (required) ──
-                        IntlPhoneFormField(
-                          countryCodeController: cubit.countryCodeController,
-                          controller: cubit.phoneController,
-                          hintTxt: '1012345678',
-                          type: 'phone',
-                          obscure: false,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return context.translate(
-                                LangKeys.validPhoneNumber,
-                              );
-                            }
-                            return null;
-                          },
-                          textInputType: TextInputType.number,
-                          title: context.translate(LangKeys.phone),
-                        ),
-                        SizedBox(height: context.height / 40),
-
-                        // ── Second phone (optional) ──
-                        IntlPhoneFormField(
-                          countryCodeController: cubit.countryCode2Controller,
-                          controller: cubit.phone2Controller,
-                          hintTxt: '1012345678',
-                          type: 'phone',
-                          obscure: false,
-                          validator: (_) => null,
-                          textInputType: TextInputType.number,
-                          title: context.translate(LangKeys.anotherPhoneNumber),
-                        ),
-                        SizedBox(height: context.height / 40),
-
-                        // ── Landline (optional) ──
-                        IntlPhoneFormField(
-                          countryCodeController: cubit.countryCode3Controller,
-                          controller: cubit.phone3Controller,
-                          hintTxt: '0212345678',
-                          type: 'phone',
-                          obscure: false,
-                          validator: (_) => null,
-                          textInputType: TextInputType.number,
-                          title: context.translate(LangKeys.landlinePhone),
-                        ),
-                        SizedBox(height: context.height / 50),
-
-                        // ── Governorate ──
-                        const GovernorateDropDown(),
-                        SizedBox(height: context.height / 35),
-
-                        // ── City ──
-                        const CityDropDown(),
-                        SizedBox(height: context.height / 35),
-
-                        // ── Area ──
-                        const AreaDropDown(),
-                        SizedBox(height: context.height / 30),
-
-                        // ── Detailed address ──
-                        AddressTextField(
-                          controller: cubit.addressController,
-                          obscure: false,
-                          hintTxt: context.translate(
-                            LangKeys.streetBuildingPlaceholder,
-                          ),
-                          maxLines: 5,
-                          type: 'address',
-                          textInputType: TextInputType.text,
-                          title: context.translate(LangKeys.detailedAddress),
-                          svgIcon: '',
-                        ),
-                        SizedBox(height: context.height / 30),
-
-                        // ── Password ──
-                        CustomTextField(
-                          controller: cubit.passwordController,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return context.translate(LangKeys.validPasswrod);
-                            }
-                            return null;
-                          },
-                          obscure: true,
-                          hintTxt: '*******',
-                          svgIcon: knock,
-                          textInputType: TextInputType.visiblePassword,
-                          title: context.translate(LangKeys.password),
-                        ),
-                        SizedBox(height: context.height / 25),
-
-                        // ── Confirm password ──
-                        CustomTextField(
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return context.translate(LangKeys.validPasswrod);
-                            }
-                            if (value != cubit.passwordController.text) {
-                              return context.translate(
-                                LangKeys.passwordsDoNotMatch,
-                              );
-                            }
-                            return null;
-                          },
-                          controller: cubit.confirmPasswordController,
-                          obscure: true,
-                          hintTxt: '*******',
-                          svgIcon: knock,
-                          textInputType: TextInputType.visiblePassword,
-                          title: context.translate(LangKeys.confirmPassword),
-                        ),
-                        SizedBox(height: context.height / 20),
-
-                        // ── Terms & Conditions ──
-                        _TermsCheckbox(
-                          accepted: cubit.termsAccepted,
-                          onChanged: cubit.toggleTerms,
-                        ),
-                        SizedBox(height: context.height / 30),
-
-                        // ── Submit button ──
-                        Container(
-                          width: double.infinity,
-                          margin: EdgeInsets.symmetric(
-                            horizontal: context.width / 20,
-                          ),
-                          child: state.maybeWhen(
-                            loading: () => const Center(
-                              child: CircularProgressIndicator(),
+                    child: SingleChildScrollView(
+                       padding: EdgeInsets.only(
+      bottom: MediaQuery.of(context).viewInsets.bottom,
+    ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: context.height / 30),
+                          OnboardingAppBar(showBackButton: true),
+                          SizedBox(height: context.height / 30),
+                      
+                          // ── Title ──
+                          Text(
+                            context.translate(LangKeys.welcomeToDrugFlow),
+                            style: TextStyles.textStyleBold24.copyWith(
+                              color: color121217,
                             ),
-                            orElse: () => CustomButton(
-                              btnTitle: context.translate(
-                                LangKeys.createAccount,
+                            textScaler: TextScaler.linear(1),
+                          ),
+                          SizedBox(height: context.height / 30),
+                      
+                          // ── Subtitle ──
+                          Text(
+                            context.translate(LangKeys.pharmacyInfoMessage),
+                            style: TextStyles.textStyleNormal12.copyWith(
+                              color: color6C6C89,
+                            ),
+                            textScaler: TextScaler.linear(1),
+                          ),
+                          SizedBox(height: context.height / 30),
+                      
+                          // ── Pharmacy image ──
+                          UploadItemWidget(
+                            onTap: _pickPharmacyImage,
+                            img: camera,
+                            title: context.translate(LangKeys.pharmacyImage),
+                            description: context.translate(
+                              LangKeys.uploadPharmacyImageHint,
+                            ),
+                          ),
+                          if (selectedImage != null) ...[
+                            SizedBox(height: context.height / 60),
+                            _SelectedImagePreview(file: selectedImage!),
+                          ],
+                          SizedBox(height: context.height / 30),
+                      
+                          // ── License image ──
+                          UploadItemWidget(
+                            onTap: _pickLicenseImage,
+                            img: camera,
+                            title: context.translate(LangKeys.licenseImage),
+                            description: context.translate(
+                              LangKeys.uploadLicenseImageHint,
+                            ),
+                          ),
+                          if (selectedImage2 != null) ...[
+                            SizedBox(height: context.height / 60),
+                            _SelectedImagePreview(file: selectedImage2!),
+                          ],
+                          SizedBox(height: context.height / 30),
+                      
+                          // ── Pharmacy name ──
+                          CustomTextField(
+                            validator: (value) {
+                              if (value == null ||
+                                  value.isEmpty ||
+                                  value.length < 4) {
+                                return context.translate(
+                                  LangKeys.validPharmacyName,
+                                );
+                              }
+                              return null;
+                            },
+                            controller: cubit.pharmacyController,
+                            obscure: false,
+                            hintTxt: context.translate(LangKeys.pharmacyName),
+                            svgIcon: pharmacy,
+                            textInputType: TextInputType.text,
+                            title: context.translate(LangKeys.pharmacyName),
+                          ),
+                          SizedBox(height: context.height / 30),
+                      
+                          // ── Email ──
+                          CustomTextField(
+                            validator: (value) {
+                              if (value == null ||
+                                  value.isEmpty ||
+                                  value.length < 4) {
+                                return context.translate(LangKeys.validEmail);
+                              }
+                              return null;
+                            },
+                            controller: cubit.mailController,
+                            obscure: false,
+                            hintTxt: 'example@mail.com',
+                            svgIcon: mail,
+                            textInputType: TextInputType.emailAddress,
+                            title: context.translate(LangKeys.email),
+                          ),
+                          SizedBox(height: context.height / 30),
+                      
+                          // ── Phone (required) ──
+                          IntlPhoneFormField(
+                            countryCodeController: cubit.countryCodeController,
+                            controller: cubit.phoneController,
+                            hintTxt: '1012345678',
+                            type: 'phone',
+                            obscure: false,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return context.translate(
+                                  LangKeys.validPhoneNumber,
+                                );
+                              }
+                              return null;
+                            },
+                            textInputType: TextInputType.number,
+                            title: context.translate(LangKeys.phone),
+                          ),
+                          SizedBox(height: context.height / 40),
+                      
+                          // ── Second phone (optional) ──
+                          IntlPhoneFormField(
+                            countryCodeController: cubit.countryCode2Controller,
+                            controller: cubit.phone2Controller,
+                            hintTxt: '1012345678',
+                            type: 'phone',
+                            obscure: false,
+                            validator: (_) => null,
+                            textInputType: TextInputType.number,
+                            title: context.translate(LangKeys.anotherPhoneNumber),
+                          ),
+                          SizedBox(height: context.height / 40),
+                      
+                          // ── Landline (optional) ──
+                          IntlPhoneFormField(
+                            countryCodeController: cubit.countryCode3Controller,
+                            controller: cubit.phone3Controller,
+                            hintTxt: '0212345678',
+                            type: 'phone',
+                            obscure: false,
+                            validator: (_) => null,
+                            textInputType: TextInputType.number,
+                            title: context.translate(LangKeys.landlinePhone),
+                          ),
+                          SizedBox(height: context.height / 50),
+                      
+                          // ── Governorate ──
+                          const GovernorateDropDown(),
+                          SizedBox(height: context.height / 35),
+                      
+                          // ── City ──
+                          const CityDropDown(),
+                          SizedBox(height: context.height / 35),
+                      
+                          // ── Area ──
+                          const AreaDropDown(),
+                          SizedBox(height: context.height / 30),
+                      
+                          // ── Detailed address ──
+                          AddressTextField(
+                            controller: cubit.addressController,
+                            obscure: false,
+                            hintTxt: context.translate(
+                              LangKeys.streetBuildingPlaceholder,
+                            ),
+                            maxLines: 5,
+                            type: 'address',
+                            textInputType: TextInputType.text,
+                            title: context.translate(LangKeys.detailedAddress),
+                            svgIcon: '',
+                          ),
+                          SizedBox(height: context.height / 30),
+                      
+                          // ── Password ──
+                          CustomTextField(
+                            controller: cubit.passwordController,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return context.translate(LangKeys.validPasswrod);
+                              }
+                              return null;
+                            },
+                            obscure: true,
+                            hintTxt: '*******',
+                            svgIcon: knock,
+                            textInputType: TextInputType.visiblePassword,
+                            title: context.translate(LangKeys.password),
+                          ),
+                          SizedBox(height: context.height / 25),
+                      
+                          // ── Confirm password ──
+                          CustomTextField(
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return context.translate(LangKeys.validPasswrod);
+                              }
+                              if (value != cubit.passwordController.text) {
+                                return context.translate(
+                                  LangKeys.passwordsDoNotMatch,
+                                );
+                              }
+                              return null;
+                            },
+                            controller: cubit.confirmPasswordController,
+                            obscure: true,
+                            hintTxt: '*******',
+                            svgIcon: knock,
+                            textInputType: TextInputType.visiblePassword,
+                            title: context.translate(LangKeys.confirmPassword),
+                          ),
+                          SizedBox(height: context.height / 20),
+                      
+                          // ── Terms & Conditions ──
+                          _TermsCheckbox(
+                            accepted: cubit.termsAccepted,
+                            onChanged: cubit.toggleTerms,
+                          ),
+                          SizedBox(height: context.height / 30),
+                      
+                          // ── Submit button ──
+                          Container(
+                            width: double.infinity,
+                            margin: EdgeInsets.symmetric(
+                              horizontal: context.width / 20,
+                            ),
+                            child: state.maybeWhen(
+                              loading: () => const Center(
+                                child: CircularProgressIndicator(),
                               ),
-                              onPressed: () => _onSubmit(context, cubit),
+                              orElse: () => CustomButton(
+                                btnTitle: context.translate(
+                                  LangKeys.createAccount,
+                                ),
+                                onPressed: () => _onSubmit(context, cubit),
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(height: context.height / 18),
-                      ],
+                          SizedBox(height: context.height / 18),
+                        ],
+                      ),
                     ),
                   ),
                 ),

@@ -77,7 +77,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         builder: (context, state) {
           final cubit = context.read<ProfileCubit>();
           final isLoading = state.maybeWhen(
-            loading: () => true,
+            updateloading: () => true,
             orElse: () => false,
           );
 

@@ -12,7 +12,6 @@ import 'core/constants/colors.dart';
 import 'go_routes.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:toastification/toastification.dart';
-
 final GlobalKey<ScaffoldMessengerState> msgKey = GlobalKey();
 final GlobalKey<NavigatorState> navKey = GlobalKey();
 

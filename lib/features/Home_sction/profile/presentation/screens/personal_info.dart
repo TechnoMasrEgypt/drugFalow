@@ -83,11 +83,7 @@ class _PersonalInfoState extends State<PersonalInfo> {
                               editProfileSc,
                               extra: context.read<ProfileCubit>(),
                             );
-                            if (context.mounted) {
-                              context
-                                  .read<ProfileCubit>()
-                                  .getProfile(); // fresh data → BlocBuilder rebuilds
-                            }
+                           
                           },
                           child: Container(
                             padding: EdgeInsets.symmetric(
