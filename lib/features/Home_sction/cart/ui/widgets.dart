@@ -79,7 +79,10 @@ class _LanguageBottomSheetState extends State<DoneBottomSheet> {
                 textColor: color121217,
                 borderColor: const Color.fromARGB(255, 213, 213, 221),
                 btnTitle: 'طلباتي',
-                onPressed: widget.onTap,
+                onPressed: () {
+                  Navigator.pop(context); // يقفل الـ bottom sheet
+                  widget.onTap(); // ينفذ الأكشن بتاعك
+                },
               ),
             ),
           ],
@@ -152,7 +155,10 @@ class DeleteBottomSheet extends StatelessWidget {
                     textColor: Colors.black,
                     borderColor: const Color.fromARGB(255, 231, 70, 70),
                     btnTitle: 'حذف',
-                    onPressed: onTap,
+                    onPressed: () {
+                      onTap();
+                      Navigator.pop(context);
+                    },
                   ),
                 ),
 

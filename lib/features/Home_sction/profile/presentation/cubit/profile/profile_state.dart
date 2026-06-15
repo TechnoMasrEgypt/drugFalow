@@ -8,7 +8,14 @@ class ProfileState with _$ProfileState {
   const factory ProfileState.loading() = Loading;
   const factory ProfileState.success(ProfileData data) = _Success;
   const factory ProfileState.error(String message) = _Error;
-    const factory ProfileState.deleteSuccess()         = DeleteSuccess; // ← new
+  const factory ProfileState.deleteSuccess() = DeleteSuccess; // ← new
 
   const factory ProfileState.updateSuccess(ProfileData data) = UpdateSuccess;
+  const factory ProfileState.updateloading() = EpLoading;
+
+  const factory ProfileState.logoutLoading() = LogoutLoading;
+
+  const factory ProfileState.logoutSuccess(String message) = LogoutSuccess;
+
+  const factory ProfileState.logoutError(String message) = LogoutError;
 }

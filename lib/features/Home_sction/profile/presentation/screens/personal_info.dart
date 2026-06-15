@@ -78,10 +78,17 @@ class _PersonalInfoState extends State<PersonalInfo> {
                         ),
                         const Spacer(),
                         GestureDetector(
-                          onTap: () => context.push(
-                            editProfileSc,
-                            extra: context.read<ProfileCubit>(),
-                          ),
+                          onTap: () async {
+                            await context.push(
+                              editProfileSc,
+                              extra: context.read<ProfileCubit>(),
+                            );
+                            if (context.mounted) {
+                              context
+                                  .read<ProfileCubit>()
+                                  .getProfile(); // fresh data → BlocBuilder rebuilds
+                            }
+                          },
                           child: Container(
                             padding: EdgeInsets.symmetric(
                               horizontal: 10.w,
@@ -161,6 +168,7 @@ class _PersonalInfoState extends State<PersonalInfo> {
                                     ),
                                   ),
                                 ),
+                                verticalSpace(50),
                               ],
                             ),
                           ),
@@ -204,16 +212,24 @@ class _PersonalInfoState extends State<PersonalInfo> {
 
               SizedBox(height: 20.h),
 
-              Row(
+              Column(
                 children: [
-                  Expanded(
+                  SizedBox(
+                    width: double.infinity,
                     child: OutlinedButton(
                       onPressed: () => Navigator.pop(context),
-                      child: const Text("إلغاء"),
+                      child: Text(
+                        "إلغاء",
+                        style: TextStyles.textStyleBold14.copyWith(
+                          fontWeight: .w600,
+                          color: Color(0xffF53D6B),
+                        ),
+                      ),
                     ),
                   ),
-                  SizedBox(width: 10.w),
-                  Expanded(
+                  SizedBox(height: 10.h),
+                  SizedBox(
+                    width: double.infinity,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xffF53D6B),
@@ -222,7 +238,13 @@ class _PersonalInfoState extends State<PersonalInfo> {
                         Navigator.pop(context);
                         context.read<ProfileCubit>().deleteAccount();
                       },
-                      child: const Text("تأكيد"),
+                      child: Text(
+                        "تأكيد",
+                        style: TextStyles.textStyleBold14.copyWith(
+                          fontWeight: .w600,
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
                   ),
                 ],

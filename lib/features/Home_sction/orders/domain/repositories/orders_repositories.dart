@@ -29,7 +29,16 @@ class OrdersRepo {
       return ApiResult.failure(ErrorHandler.handle(e));
     }
   }
-
+ Future<ApiResult<CreateOrderResponse>> createDirectOrder(
+    CreateOrderParams body,
+  ) async {
+    try {
+      final response = await _apiService.createDirectOrder(body);
+      return ApiResult.success(response);
+    } catch (e) {
+      return ApiResult.failure(ErrorHandler.handle(e));
+    }
+  }
   Future<ApiResult<CreateReviewResponse>> createReview(
     CreateReviewParams body,
   ) async {

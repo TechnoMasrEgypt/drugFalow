@@ -5,6 +5,7 @@ import 'package:drug_flow/core/constants/styles.dart';
 import 'package:drug_flow/core/constants/screens.dart';
 import 'package:drug_flow/core/utils/helpers.dart';
 import 'package:drug_flow/core/widgets/custom_button.dart';
+import 'package:drug_flow/features/Auths/auth/domain/entities/reset_password/reset_password_params.dart';
 import 'package:drug_flow/features/Auths/otp/logic/otp_cubit.dart';
 import 'package:drug_flow/features/Auths/otp/logic/otp_state.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -111,7 +112,13 @@ class _OtpScreenState extends State<OtpScreen> {
               ),
             );
 
-            context.go(loginSc);
+            context.go(
+              resetPasswordSc,
+              extra: ResetPasswordParams(
+                email: widget.email,
+                resetToken: response.data?.resetToken,
+              ),
+            );
           },
           resendSuccess: (response) {
             _startTimer();

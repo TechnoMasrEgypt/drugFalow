@@ -1,13 +1,18 @@
 import 'package:dio/dio.dart';
 import 'package:drug_flow/core/networking/endPoints.dart';
 import 'package:drug_flow/features/Auths/auth/domain/entities/delete_account/delete_account_response.dart';
+import 'package:drug_flow/features/Auths/auth/domain/entities/reset_password/reset_password_params.dart';
+import 'package:drug_flow/features/Auths/auth/domain/entities/reset_password/reset_password_response.dart';
 import 'package:drug_flow/features/Auths/auth/domain/entities/verify_reset_code/verify_reset_code_response.dart';
 import 'package:drug_flow/features/Auths/forgot_password/data/forget_password_response.dart';
 import 'package:drug_flow/features/Auths/register/data/governorate_model.dart';
 import 'package:drug_flow/features/Auths/register/data/register_request_body.dart';
 import 'package:drug_flow/features/Auths/register/data/register_response.dart';
+import 'package:drug_flow/features/Home_sction/cart/data/SwapWarehouseRequest.dart';
 import 'package:drug_flow/features/Home_sction/cart/data/add_to_cart_request.dart';
 import 'package:drug_flow/features/Home_sction/cart/data/cart_response.dart';
+import 'package:drug_flow/features/Home_sction/cart/data/coupon_request.dart';
+import 'package:drug_flow/features/Home_sction/cart/data/coupon_response.dart';
 import 'package:drug_flow/features/Home_sction/cart/data/update_cart_item_request.dart';
 import 'package:drug_flow/features/Home_sction/filters/data.dart';
 import 'package:drug_flow/features/Home_sction/home/data/slider_response.dart';
@@ -24,6 +29,7 @@ import 'package:drug_flow/features/Home_sction/profile/data/contact_response.dar
 import 'package:drug_flow/features/Home_sction/profile/data/coupon_response.dart';
 import 'package:drug_flow/features/Home_sction/profile/data/faqs_response.dart';
 import 'package:drug_flow/features/Home_sction/profile/data/get_profile/profile_response.dart';
+import 'package:drug_flow/features/Home_sction/profile/data/logout_response.dart';
 import 'package:drug_flow/features/Home_sction/profile/data/models/update_profile_request_body.dart';
 import 'package:drug_flow/features/Home_sction/profile/data/social_links_response.dart';
 import 'package:retrofit/retrofit.dart';
@@ -41,6 +47,8 @@ abstract class ApiService {
   factory ApiService(Dio dio, {String baseUrl}) = _ApiService;
   @POST(ApiConstants.login)
   Future<LoginResponse> login(@Body() LoginRequestBody body);
+  @POST(ApiConstants.resetPassword)
+  Future<ResetPasswordResponse> resetPassword(@Body() ResetPasswordParams body);
   @GET(ApiConstants.slides)
   Future<SliderResponse> slides();
   @GET(ApiConstants.warehouses)
@@ -108,11 +116,22 @@ abstract class ApiService {
     @Path('id') int id,
     @Body() Map<String, dynamic> body,
   );
+  @POST("/orders/validate-coupon")
+Future<CouponResponseModel> applyCoupon(
+  @Body() ApplyCouponRequest body,
+);
+@POST("/orders/swap-warehouse")
+Future<CartItemModel> swapWarehouse(
+  @Body() SwapWarehouseRequest body,
+);
   @DELETE(ApiConstants.deleteAccount)
   Future<DeleteAccountResponse> deleteAccount();
 
   @POST(ApiConstants.createOrder)
   Future<CreateOrderResponse> createOrder(@Body() CreateOrderParams body);
+
+   @POST(ApiConstants.createDirectOrder)
+  Future<CreateOrderResponse> createDirectOrder(@Body() CreateOrderParams body);
 
   @POST(ApiConstants.createReview)
   Future<CreateReviewResponse> createReview(@Body() CreateReviewParams body);
@@ -121,6 +140,8 @@ abstract class ApiService {
   Future<MyOrdersResponse> getMyOrders(
     // @Query("status") String? status,
   );
+  @POST('/auth/logout')
+Future<LogoutResponse> logout();
   @GET(ApiConstants.orderStatuses)
   Future<OrderStatusesResponse> getOrderStatuses();
   @GET("${ApiConstants.orderDetails}/{id}")

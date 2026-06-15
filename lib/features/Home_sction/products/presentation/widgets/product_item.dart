@@ -53,8 +53,8 @@ class ProductItem extends StatelessWidget {
                     textScaler: TextScaler.linear(1),
                   ),
                   SizedBox(height: 4.h),
-                  Text(
-                    "اسم القسم",
+                  Text( 
+                    data.category ?? 'اسم القسم',
                     style: TextStyles.textStyleNormal11.copyWith(
                       color: color6C6C89,
                     ),
@@ -62,7 +62,7 @@ class ProductItem extends StatelessWidget {
                   ),
                   SizedBox(height: context.height / 90),
                   if (data.activeIngredients != null &&
-                      data.activeIngredients!.isNotEmpty)
+                      data.activeIngredients!.isNotEmpty==true)
                     Wrap(
                       spacing: 4.w,
                       runSpacing: 2.h,

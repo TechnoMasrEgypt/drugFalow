@@ -1,5 +1,6 @@
 
 import 'package:drug_flow/core/networking/api_result.dart';
+import 'package:drug_flow/features/Auths/auth/domain/entities/reset_password/reset_password_params.dart';
 import 'package:drug_flow/features/Auths/forgot_password/data/forget_password_repo.dart';
 import 'package:drug_flow/features/Auths/forgot_password/logic/forget_password_state.dart';
 import 'package:bloc/bloc.dart';
@@ -24,6 +25,17 @@ class ForgetPasswordCubit extends Cubit<ForgetPassState> {
       ),
     );
   }
+
+  Future<void> resetPassword(ResetPasswordParams params) async {
+    emit(const ForgetPassState.loading());
+    final result = await _foForgetRepo.resetPassword(params);
+    result.when(
+      success: (response) => emit(ForgetPassState.resetPasswordSuccess(response)),
+      failure: (error) => emit(
+        ForgetPassState.error(message: error.apiErrorModel.message ?? 'خطأ في الإرسال'),
+      ),
+    );
+  } 
     @override
    Future<void> close() {
     emailEditingController.dispose();

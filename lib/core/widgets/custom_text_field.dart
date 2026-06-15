@@ -45,7 +45,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
+      // mainAxisSize: MainAxisSize.min,
       children: [
         Text(
           widget.title,
@@ -88,7 +88,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 width: widget.type == 'address' ? 0 : context.width / 34,
                 alignment: Alignment.center,
                 child: customSvg(
-                  name: widget.svgIcon,
+                  name: widget.svgIcon??'',
                   fit: BoxFit.cover,
                   width: context.width / 40,
                   height: context.height / 40,

@@ -55,7 +55,7 @@ extension ProfileStatePatterns on ProfileState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Initial value)?  initial,TResult Function( Loading value)?  loading,TResult Function( _Success value)?  success,TResult Function( _Error value)?  error,TResult Function( DeleteSuccess value)?  deleteSuccess,TResult Function( UpdateSuccess value)?  updateSuccess,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Initial value)?  initial,TResult Function( Loading value)?  loading,TResult Function( _Success value)?  success,TResult Function( _Error value)?  error,TResult Function( DeleteSuccess value)?  deleteSuccess,TResult Function( UpdateSuccess value)?  updateSuccess,TResult Function( EpLoading value)?  updateloading,TResult Function( LogoutLoading value)?  logoutLoading,TResult Function( LogoutSuccess value)?  logoutSuccess,TResult Function( LogoutError value)?  logoutError,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
@@ -64,7 +64,11 @@ return loading(_that);case _Success() when success != null:
 return success(_that);case _Error() when error != null:
 return error(_that);case DeleteSuccess() when deleteSuccess != null:
 return deleteSuccess(_that);case UpdateSuccess() when updateSuccess != null:
-return updateSuccess(_that);case _:
+return updateSuccess(_that);case EpLoading() when updateloading != null:
+return updateloading(_that);case LogoutLoading() when logoutLoading != null:
+return logoutLoading(_that);case LogoutSuccess() when logoutSuccess != null:
+return logoutSuccess(_that);case LogoutError() when logoutError != null:
+return logoutError(_that);case _:
   return orElse();
 
 }
@@ -82,7 +86,7 @@ return updateSuccess(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Initial value)  initial,required TResult Function( Loading value)  loading,required TResult Function( _Success value)  success,required TResult Function( _Error value)  error,required TResult Function( DeleteSuccess value)  deleteSuccess,required TResult Function( UpdateSuccess value)  updateSuccess,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Initial value)  initial,required TResult Function( Loading value)  loading,required TResult Function( _Success value)  success,required TResult Function( _Error value)  error,required TResult Function( DeleteSuccess value)  deleteSuccess,required TResult Function( UpdateSuccess value)  updateSuccess,required TResult Function( EpLoading value)  updateloading,required TResult Function( LogoutLoading value)  logoutLoading,required TResult Function( LogoutSuccess value)  logoutSuccess,required TResult Function( LogoutError value)  logoutError,}){
 final _that = this;
 switch (_that) {
 case _Initial():
@@ -91,7 +95,11 @@ return loading(_that);case _Success():
 return success(_that);case _Error():
 return error(_that);case DeleteSuccess():
 return deleteSuccess(_that);case UpdateSuccess():
-return updateSuccess(_that);case _:
+return updateSuccess(_that);case EpLoading():
+return updateloading(_that);case LogoutLoading():
+return logoutLoading(_that);case LogoutSuccess():
+return logoutSuccess(_that);case LogoutError():
+return logoutError(_that);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -108,7 +116,7 @@ return updateSuccess(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Initial value)?  initial,TResult? Function( Loading value)?  loading,TResult? Function( _Success value)?  success,TResult? Function( _Error value)?  error,TResult? Function( DeleteSuccess value)?  deleteSuccess,TResult? Function( UpdateSuccess value)?  updateSuccess,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Initial value)?  initial,TResult? Function( Loading value)?  loading,TResult? Function( _Success value)?  success,TResult? Function( _Error value)?  error,TResult? Function( DeleteSuccess value)?  deleteSuccess,TResult? Function( UpdateSuccess value)?  updateSuccess,TResult? Function( EpLoading value)?  updateloading,TResult? Function( LogoutLoading value)?  logoutLoading,TResult? Function( LogoutSuccess value)?  logoutSuccess,TResult? Function( LogoutError value)?  logoutError,}){
 final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
@@ -117,7 +125,11 @@ return loading(_that);case _Success() when success != null:
 return success(_that);case _Error() when error != null:
 return error(_that);case DeleteSuccess() when deleteSuccess != null:
 return deleteSuccess(_that);case UpdateSuccess() when updateSuccess != null:
-return updateSuccess(_that);case _:
+return updateSuccess(_that);case EpLoading() when updateloading != null:
+return updateloading(_that);case LogoutLoading() when logoutLoading != null:
+return logoutLoading(_that);case LogoutSuccess() when logoutSuccess != null:
+return logoutSuccess(_that);case LogoutError() when logoutError != null:
+return logoutError(_that);case _:
   return null;
 
 }
@@ -134,7 +146,7 @@ return updateSuccess(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( ProfileData data)?  success,TResult Function( String message)?  error,TResult Function()?  deleteSuccess,TResult Function( ProfileData data)?  updateSuccess,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( ProfileData data)?  success,TResult Function( String message)?  error,TResult Function()?  deleteSuccess,TResult Function( ProfileData data)?  updateSuccess,TResult Function()?  updateloading,TResult Function()?  logoutLoading,TResult Function( String message)?  logoutSuccess,TResult Function( String message)?  logoutError,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case Loading() when loading != null:
@@ -142,7 +154,11 @@ return loading();case _Success() when success != null:
 return success(_that.data);case _Error() when error != null:
 return error(_that.message);case DeleteSuccess() when deleteSuccess != null:
 return deleteSuccess();case UpdateSuccess() when updateSuccess != null:
-return updateSuccess(_that.data);case _:
+return updateSuccess(_that.data);case EpLoading() when updateloading != null:
+return updateloading();case LogoutLoading() when logoutLoading != null:
+return logoutLoading();case LogoutSuccess() when logoutSuccess != null:
+return logoutSuccess(_that.message);case LogoutError() when logoutError != null:
+return logoutError(_that.message);case _:
   return orElse();
 
 }
@@ -160,7 +176,7 @@ return updateSuccess(_that.data);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( ProfileData data)  success,required TResult Function( String message)  error,required TResult Function()  deleteSuccess,required TResult Function( ProfileData data)  updateSuccess,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( ProfileData data)  success,required TResult Function( String message)  error,required TResult Function()  deleteSuccess,required TResult Function( ProfileData data)  updateSuccess,required TResult Function()  updateloading,required TResult Function()  logoutLoading,required TResult Function( String message)  logoutSuccess,required TResult Function( String message)  logoutError,}) {final _that = this;
 switch (_that) {
 case _Initial():
 return initial();case Loading():
@@ -168,7 +184,11 @@ return loading();case _Success():
 return success(_that.data);case _Error():
 return error(_that.message);case DeleteSuccess():
 return deleteSuccess();case UpdateSuccess():
-return updateSuccess(_that.data);case _:
+return updateSuccess(_that.data);case EpLoading():
+return updateloading();case LogoutLoading():
+return logoutLoading();case LogoutSuccess():
+return logoutSuccess(_that.message);case LogoutError():
+return logoutError(_that.message);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -185,7 +205,7 @@ return updateSuccess(_that.data);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( ProfileData data)?  success,TResult? Function( String message)?  error,TResult? Function()?  deleteSuccess,TResult? Function( ProfileData data)?  updateSuccess,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( ProfileData data)?  success,TResult? Function( String message)?  error,TResult? Function()?  deleteSuccess,TResult? Function( ProfileData data)?  updateSuccess,TResult? Function()?  updateloading,TResult? Function()?  logoutLoading,TResult? Function( String message)?  logoutSuccess,TResult? Function( String message)?  logoutError,}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case Loading() when loading != null:
@@ -193,7 +213,11 @@ return loading();case _Success() when success != null:
 return success(_that.data);case _Error() when error != null:
 return error(_that.message);case DeleteSuccess() when deleteSuccess != null:
 return deleteSuccess();case UpdateSuccess() when updateSuccess != null:
-return updateSuccess(_that.data);case _:
+return updateSuccess(_that.data);case EpLoading() when updateloading != null:
+return updateloading();case LogoutLoading() when logoutLoading != null:
+return logoutLoading();case LogoutSuccess() when logoutSuccess != null:
+return logoutSuccess(_that.message);case LogoutError() when logoutError != null:
+return logoutError(_that.message);case _:
   return null;
 
 }
@@ -489,6 +513,202 @@ class _$UpdateSuccessCopyWithImpl<$Res>
   return _then(UpdateSuccess(
 null == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
 as ProfileData,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class EpLoading implements ProfileState {
+  const EpLoading();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EpLoading);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'ProfileState.updateloading()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class LogoutLoading implements ProfileState {
+  const LogoutLoading();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LogoutLoading);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'ProfileState.logoutLoading()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class LogoutSuccess implements ProfileState {
+  const LogoutSuccess(this.message);
+  
+
+ final  String message;
+
+/// Create a copy of ProfileState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$LogoutSuccessCopyWith<LogoutSuccess> get copyWith => _$LogoutSuccessCopyWithImpl<LogoutSuccess>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LogoutSuccess&&(identical(other.message, message) || other.message == message));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,message);
+
+@override
+String toString() {
+  return 'ProfileState.logoutSuccess(message: $message)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $LogoutSuccessCopyWith<$Res> implements $ProfileStateCopyWith<$Res> {
+  factory $LogoutSuccessCopyWith(LogoutSuccess value, $Res Function(LogoutSuccess) _then) = _$LogoutSuccessCopyWithImpl;
+@useResult
+$Res call({
+ String message
+});
+
+
+
+
+}
+/// @nodoc
+class _$LogoutSuccessCopyWithImpl<$Res>
+    implements $LogoutSuccessCopyWith<$Res> {
+  _$LogoutSuccessCopyWithImpl(this._self, this._then);
+
+  final LogoutSuccess _self;
+  final $Res Function(LogoutSuccess) _then;
+
+/// Create a copy of ProfileState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? message = null,}) {
+  return _then(LogoutSuccess(
+null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class LogoutError implements ProfileState {
+  const LogoutError(this.message);
+  
+
+ final  String message;
+
+/// Create a copy of ProfileState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$LogoutErrorCopyWith<LogoutError> get copyWith => _$LogoutErrorCopyWithImpl<LogoutError>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LogoutError&&(identical(other.message, message) || other.message == message));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,message);
+
+@override
+String toString() {
+  return 'ProfileState.logoutError(message: $message)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $LogoutErrorCopyWith<$Res> implements $ProfileStateCopyWith<$Res> {
+  factory $LogoutErrorCopyWith(LogoutError value, $Res Function(LogoutError) _then) = _$LogoutErrorCopyWithImpl;
+@useResult
+$Res call({
+ String message
+});
+
+
+
+
+}
+/// @nodoc
+class _$LogoutErrorCopyWithImpl<$Res>
+    implements $LogoutErrorCopyWith<$Res> {
+  _$LogoutErrorCopyWithImpl(this._self, this._then);
+
+  final LogoutError _self;
+  final $Res Function(LogoutError) _then;
+
+/// Create a copy of ProfileState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? message = null,}) {
+  return _then(LogoutError(
+null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 

@@ -55,14 +55,15 @@ extension ForgetPassStatePatterns on ForgetPassState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Initial value)?  initial,TResult Function( _Loading value)?  loading,TResult Function( _ForgetSuccess value)?  ForgetSuccess,TResult Function( _Error value)?  error,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Initial value)?  initial,TResult Function( _Loading value)?  loading,TResult Function( _ForgetSuccess value)?  ForgetSuccess,TResult Function( _Error value)?  error,TResult Function( _ResetPasswordSuccess value)?  resetPasswordSuccess,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial(_that);case _Loading() when loading != null:
 return loading(_that);case _ForgetSuccess() when ForgetSuccess != null:
 return ForgetSuccess(_that);case _Error() when error != null:
-return error(_that);case _:
+return error(_that);case _ResetPasswordSuccess() when resetPasswordSuccess != null:
+return resetPasswordSuccess(_that);case _:
   return orElse();
 
 }
@@ -80,14 +81,15 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Initial value)  initial,required TResult Function( _Loading value)  loading,required TResult Function( _ForgetSuccess value)  ForgetSuccess,required TResult Function( _Error value)  error,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Initial value)  initial,required TResult Function( _Loading value)  loading,required TResult Function( _ForgetSuccess value)  ForgetSuccess,required TResult Function( _Error value)  error,required TResult Function( _ResetPasswordSuccess value)  resetPasswordSuccess,}){
 final _that = this;
 switch (_that) {
 case _Initial():
 return initial(_that);case _Loading():
 return loading(_that);case _ForgetSuccess():
 return ForgetSuccess(_that);case _Error():
-return error(_that);case _:
+return error(_that);case _ResetPasswordSuccess():
+return resetPasswordSuccess(_that);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -104,14 +106,15 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Initial value)?  initial,TResult? Function( _Loading value)?  loading,TResult? Function( _ForgetSuccess value)?  ForgetSuccess,TResult? Function( _Error value)?  error,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Initial value)?  initial,TResult? Function( _Loading value)?  loading,TResult? Function( _ForgetSuccess value)?  ForgetSuccess,TResult? Function( _Error value)?  error,TResult? Function( _ResetPasswordSuccess value)?  resetPasswordSuccess,}){
 final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial(_that);case _Loading() when loading != null:
 return loading(_that);case _ForgetSuccess() when ForgetSuccess != null:
 return ForgetSuccess(_that);case _Error() when error != null:
-return error(_that);case _:
+return error(_that);case _ResetPasswordSuccess() when resetPasswordSuccess != null:
+return resetPasswordSuccess(_that);case _:
   return null;
 
 }
@@ -128,13 +131,14 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( ForgetResponseModel response)?  ForgetSuccess,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( ForgetResponseModel response)?  ForgetSuccess,TResult Function( String message)?  error,TResult Function( ResetPasswordResponse response)?  resetPasswordSuccess,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Loading() when loading != null:
 return loading();case _ForgetSuccess() when ForgetSuccess != null:
 return ForgetSuccess(_that.response);case _Error() when error != null:
-return error(_that.message);case _:
+return error(_that.message);case _ResetPasswordSuccess() when resetPasswordSuccess != null:
+return resetPasswordSuccess(_that.response);case _:
   return orElse();
 
 }
@@ -152,13 +156,14 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( ForgetResponseModel response)  ForgetSuccess,required TResult Function( String message)  error,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( ForgetResponseModel response)  ForgetSuccess,required TResult Function( String message)  error,required TResult Function( ResetPasswordResponse response)  resetPasswordSuccess,}) {final _that = this;
 switch (_that) {
 case _Initial():
 return initial();case _Loading():
 return loading();case _ForgetSuccess():
 return ForgetSuccess(_that.response);case _Error():
-return error(_that.message);case _:
+return error(_that.message);case _ResetPasswordSuccess():
+return resetPasswordSuccess(_that.response);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -175,13 +180,14 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( ForgetResponseModel response)?  ForgetSuccess,TResult? Function( String message)?  error,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( ForgetResponseModel response)?  ForgetSuccess,TResult? Function( String message)?  error,TResult? Function( ResetPasswordResponse response)?  resetPasswordSuccess,}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Loading() when loading != null:
 return loading();case _ForgetSuccess() when ForgetSuccess != null:
 return ForgetSuccess(_that.response);case _Error() when error != null:
-return error(_that.message);case _:
+return error(_that.message);case _ResetPasswordSuccess() when resetPasswordSuccess != null:
+return resetPasswordSuccess(_that.response);case _:
   return null;
 
 }
@@ -379,6 +385,72 @@ class __$ErrorCopyWithImpl<$Res>
   return _then(_Error(
 message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
 as String,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class _ResetPasswordSuccess implements ForgetPassState {
+  const _ResetPasswordSuccess(this.response);
+  
+
+ final  ResetPasswordResponse response;
+
+/// Create a copy of ForgetPassState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$ResetPasswordSuccessCopyWith<_ResetPasswordSuccess> get copyWith => __$ResetPasswordSuccessCopyWithImpl<_ResetPasswordSuccess>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ResetPasswordSuccess&&(identical(other.response, response) || other.response == response));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,response);
+
+@override
+String toString() {
+  return 'ForgetPassState.resetPasswordSuccess(response: $response)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$ResetPasswordSuccessCopyWith<$Res> implements $ForgetPassStateCopyWith<$Res> {
+  factory _$ResetPasswordSuccessCopyWith(_ResetPasswordSuccess value, $Res Function(_ResetPasswordSuccess) _then) = __$ResetPasswordSuccessCopyWithImpl;
+@useResult
+$Res call({
+ ResetPasswordResponse response
+});
+
+
+
+
+}
+/// @nodoc
+class __$ResetPasswordSuccessCopyWithImpl<$Res>
+    implements _$ResetPasswordSuccessCopyWith<$Res> {
+  __$ResetPasswordSuccessCopyWithImpl(this._self, this._then);
+
+  final _ResetPasswordSuccess _self;
+  final $Res Function(_ResetPasswordSuccess) _then;
+
+/// Create a copy of ForgetPassState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? response = null,}) {
+  return _then(_ResetPasswordSuccess(
+null == response ? _self.response : response // ignore: cast_nullable_to_non_nullable
+as ResetPasswordResponse,
   ));
 }
 

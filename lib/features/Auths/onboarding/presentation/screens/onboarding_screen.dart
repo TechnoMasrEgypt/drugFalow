@@ -49,7 +49,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
         body: Column(
           children: [
             SizedBox(height: context.height / 40),
-            OnboardingAppBar(),
+            OnboardingAppBarreversed(),
             SizedBox(height: context.height / 60),
             Expanded(
               child: BlocBuilder<OnboardingCubit, OnboardingState>(

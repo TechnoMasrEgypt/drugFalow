@@ -16,8 +16,8 @@ import '../../../../../core/widgets/image_handler.dart';
 import 'package:go_router/go_router.dart';
 
 class ProductGridItem extends StatelessWidget {
-  ProductModel? productModel;
-  ProductGridItem({super.key, this.productModel});
+  final ProductModel productModel;
+  ProductGridItem({super.key, required this.productModel});
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -61,10 +61,12 @@ class ProductGridItem extends StatelessWidget {
               textScaler: TextScaler.linear(1),
             ),
             SizedBox(height: context.height / 90),
+            if (productModel?.activeIngredients?.isNotEmpty == true)
             Wrap(
               spacing: 4.w,
               runSpacing: 2.h,
-              children: productModel!.activeIngredients!
+              children:
+               productModel.activeIngredients!
                   .map(
                     (ing) => Container(
                       padding: EdgeInsets.symmetric(

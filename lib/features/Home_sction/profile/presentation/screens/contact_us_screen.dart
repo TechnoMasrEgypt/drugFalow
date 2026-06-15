@@ -9,25 +9,33 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class ContactUsScreen extends StatefulWidget {
+class ContactUsScreen extends StatelessWidget {
   const ContactUsScreen({super.key});
 
   @override
-  State<ContactUsScreen> createState() => _ContactUsScreenState();
-}
-
-class _ContactUsScreenState extends State<ContactUsScreen> {
-  @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SocialLinksCubit, SocialLinksState>(
-      builder: (context, state) {
-        var cubit = context.read<SocialLinksCubit>();
-        if (state is! SocialLinksSuccess) {
-          return Scaffold(
-            body: Center(child: CircularProgressIndicator(color: primaryDark)),
+    return BlocConsumer<SocialLinksCubit, SocialLinksState>(
+      listener: (context, state) {
+        if (state is ContactUsSuccess) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('تم إرسال الرسالة بنجاح')),
           );
         }
-        final links = state.data;
+        if (state is ContactUsError) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.message)));
+        }
+      },
+      builder: (context, state) {
+        final cubit = context.read<SocialLinksCubit>();
+
+        // Safely get links only when state has data
+        final links = state is SocialLinksSuccess
+            ? (state as SocialLinksSuccess).data
+            : null;
+
+        final isLoading = state is SocialLinksLoading;
 
         return Scaffold(
           backgroundColor: Colors.white,
@@ -40,7 +48,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                   children: [
                     const SizedBox(height: 20),
 
-                    // ── Title Row ──────────────────────────────────────
+                    // ── Title Row ──────────────────────────────────────────
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
@@ -64,7 +72,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
 
                     SizedBox(height: 24.h),
 
-                    // ── الاسم ──────────────────────────────────────────
+                    // ── الاسم ──────────────────────────────────────────────
                     _buildLabel('الاسم'),
                     SizedBox(height: 12.h),
                     _buildTextField(
@@ -72,14 +80,14 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                       hint: 'أحمد حامد',
                       prefixIcon: Icon(
                         Icons.person_outline,
-                        color: Color(0xFF8E8E93),
+                        color: const Color(0xFF8E8E93),
                         size: 20.sp,
                       ),
                     ),
 
                     SizedBox(height: 16.h),
 
-                    // ── رقم الهاتف ────────────────────────────────────
+                    // ── رقم الهاتف ─────────────────────────────────────────
                     _buildLabel('رقم الهاتف *'),
                     SizedBox(height: 12.h),
                     _buildTextField(
@@ -89,7 +97,6 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                       prefixIcon: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          // Egyptian flag emoji rendered as text
                           Text(
                             '🇪🇬',
                             style: TextStyles.textStyleNormal10.copyWith(
@@ -109,7 +116,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
 
                     SizedBox(height: 16.h),
 
-                    // ── البريد الإلكتروني ─────────────────────────────
+                    // ── البريد الإلكتروني ──────────────────────────────────
                     _buildLabel('البريد الإلكتروني *'),
                     SizedBox(height: 12.h),
                     _buildTextField(
@@ -118,55 +125,60 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                       keyboardType: TextInputType.emailAddress,
                       prefixIcon: Icon(
                         Icons.email,
-                        color: Color(0xFF8E8E93),
+                        color: const Color(0xFF8E8E93),
                         size: 20.sp,
                       ),
                     ),
 
                     SizedBox(height: 16.h),
 
-                    // ── الرسالة ───────────────────────────────────────
+                    // ── الرسالة ────────────────────────────────────────────
                     _buildLabel('الرسالة'),
                     SizedBox(height: 6.h),
-                    _buildMessageField(),
+                    _buildMessageField(cubit),
 
                     SizedBox(height: 16.h),
 
-                    // ── Send Button ───────────────────────────────────
+                    // ── Send Button ────────────────────────────────────────
                     SizedBox(
                       width: double.infinity,
                       height: 50.h,
                       child: ElevatedButton(
-                        onPressed: () {
-                          context.read<SocialLinksCubit>().contactUs(
-                            ContactRequest(
-                              name: cubit.nameController.text,
-                              phone: cubit.phoneController.text,
-                              email: cubit.emailController.text,
-                              message: cubit.messageController.text,
-                            ),
-                          );
-                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: primaryDark,
+                          foregroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          elevation: 0,
-                        ),
-                        child: Text(
-                          'إرسال',
-                          style: TextStyles.textStyleBold14.copyWith(
-                            fontSize: 16.sp,
-                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10.r),
                           ),
                         ),
+                        onPressed: isLoading
+                            ? null
+                            : () {
+                                cubit.contactUs(
+                                  ContactRequest(
+                                    name: cubit.nameController.text,
+                                    phone: cubit.phoneController.text,
+                                    email: cubit.emailController.text,
+                                    message: cubit.messageController.text,
+                                  ),
+                                );
+                              },
+                        child: isLoading
+                            ? const SizedBox(
+                                width: 24,
+                                height: 24,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : const Text('إرسال'),
                       ),
                     ),
 
                     SizedBox(height: 24.h),
 
-                    // ── Social Section Label ──────────────────────────
+                    // ── Social Section Label ───────────────────────────────
                     Text(
                       'قنوات التواصل الاجتماعي',
                       style: TextStyles.textStyleNormal10.copyWith(
@@ -176,73 +188,80 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
 
                     SizedBox(height: 16.h),
 
-                    // ── Social Icons Row 1: LinkedIn, X, YouTube, Facebook ──
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _buildSocialIcon(
-                          onTap: () => cubit.openLink(links.linkedin!),
-                          child: _LinkedInIcon(),
-                        ),
-                        SizedBox(width: 12.w),
-                        _buildSocialIcon(
-                          onTap: () => cubit.openLink(links.twitter!),
-                          child: _XIcon(),
-                        ),
-                        SizedBox(width: 12.w),
-                        _buildSocialIcon(
-                          onTap: () => cubit.openLink(links.youtube!),
-                          child: _YouTubeIcon(),
-                        ),
-                        SizedBox(width: 12.w),
-                        _buildSocialIcon(
-                          onTap: () => cubit.openLink(links.facebook!),
-                          child: _FacebookIcon(),
-                        ),
-                      ],
-                    ),
+                    // Show social icons only when links are available
+                    if (links != null) ...[
+                      // ── Social Icons Row 1: LinkedIn, X, YouTube, Facebook ──
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          _buildSocialIcon(
+                            onTap: () => cubit.openLink(links.linkedin ?? ''),
+                            child: const _LinkedInIcon(),
+                          ),
+                          SizedBox(width: 12.w),
+                          _buildSocialIcon(
+                            onTap: () => cubit.openLink(links.twitter ?? ''),
+                            child: const _XIcon(),
+                          ),
+                          SizedBox(width: 12.w),
+                          _buildSocialIcon(
+                            onTap: () => cubit.openLink(links.youtube ?? ''),
+                            child: const _YouTubeIcon(),
+                          ),
+                          SizedBox(width: 12.w),
+                          _buildSocialIcon(
+                            onTap: () => cubit.openLink(links.facebook ?? ''),
+                            child: const _FacebookIcon(),
+                          ),
+                        ],
+                      ),
 
-                    SizedBox(height: 12.h),
+                      SizedBox(height: 12.h),
 
-                    // ── Social Icons Row 2: TikTok, WhatsApp, Instagram, Telegram ──
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _buildSocialIcon(
-                          onTap: () => cubit.openLink(links.whatsapp!),
-                          child: _TikTokIcon(),
-                        ),
-                        SizedBox(width: 12.w),
-                        _buildSocialIcon(
-                          onTap: () => cubit.openLink(links.whatsapp!),
-                          child: _WhatsAppIcon(),
-                        ),
-                        SizedBox(width: 12.w),
-                        _buildSocialIcon(
-                          onTap: () => cubit.openLink(links.instagram!),
-                          child: _InstagramIcon(),
-                        ),
-                        SizedBox(width: 12.w),
-                        _buildSocialIcon(
-                          onTap: () => cubit.openLink(links.whatsapp!),
-                          child: _TelegramIcon(),
-                        ),
-                      ],
-                    ),
+                      // ── Social Icons Row 2: TikTok, WhatsApp, Instagram, Telegram ──
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          _buildSocialIcon(
+                            onTap: () => cubit.openLink(links.facebook ?? ''),
+                            child: const _TikTokIcon(),
+                          ),
+                          SizedBox(width: 12.w),
+                          _buildSocialIcon(
+                            onTap: () => cubit.openLink(links.whatsapp ?? ''),
+                            child: const _WhatsAppIcon(),
+                          ),
+                          SizedBox(width: 12.w),
+                          _buildSocialIcon(
+                            onTap: () => cubit.openLink(links.instagram ?? ''),
+                            child: const _InstagramIcon(),
+                          ),
+                          SizedBox(width: 12.w),
+                          _buildSocialIcon(
+                            onTap: () => cubit.openLink(links.facebook ?? ''),
+                            child: const _TelegramIcon(),
+                          ),
+                        ],
+                      ),
+                    ] else ...[
+                      // Show shimmer/placeholder while loading social links
+                      const Center(child: CircularProgressIndicator()),
+                    ],
 
                     SizedBox(height: 30.h),
 
-                    // ── Bottom indicator ──────────────────────────────
+                    // ── Bottom indicator ───────────────────────────────────
                     Center(
                       child: Container(
                         width: 120.w,
                         height: 4,
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.3),
+                          color: Colors.black.withOpacity(0.15),
                           borderRadius: BorderRadius.circular(2.r),
                         ),
                       ),
                     ),
+
                     const SizedBox(height: 12),
                   ],
                 ),
@@ -254,12 +273,12 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
     );
   }
 
-  // ── Helpers ────────────────────────────────────────────────────────────────
+  // ── Helpers ──────────────────────────────────────────────────────────────────
 
   Widget _buildLabel(String text) {
     return Text(
       text,
-      style: TextStyles.textStyleNormal14.copyWith(fontWeight: .w600),
+      style: TextStyles.textStyleNormal14.copyWith(fontWeight: FontWeight.w600),
     );
   }
 
@@ -272,12 +291,9 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
     return Container(
       height: 48.h,
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 255, 255, 255),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(10.r),
-        border: Border.all(
-          color: const Color.fromARGB(255, 238, 238, 245),
-          width: 1,
-        ),
+        border: Border.all(color: const Color(0xFFEEEEF5), width: 1),
       ),
       child: TextField(
         controller: controller,
@@ -292,7 +308,14 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                   child: prefixIcon,
                 )
               : null,
-          suffixIconConstraints: BoxConstraints(minWidth: 0, minHeight: 0),
+          prefixIconConstraints: const BoxConstraints(
+            minWidth: 0,
+            minHeight: 0,
+          ),
+          suffixIconConstraints: const BoxConstraints(
+            minWidth: 0,
+            minHeight: 0,
+          ),
           contentPadding: EdgeInsets.symmetric(
             horizontal: 14.w,
             vertical: 14.h,
@@ -304,19 +327,16 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
     );
   }
 
-  Widget _buildMessageField() {
+  Widget _buildMessageField(SocialLinksCubit cubit) {
     return Container(
       height: 110.h,
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 255, 255, 255),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(10.r),
-        border: Border.all(
-          color: const Color.fromARGB(255, 238, 238, 245),
-          width: 1,
-        ),
+        border: Border.all(color: const Color(0xFFEEEEF5), width: 1),
       ),
       child: TextField(
-        controller: context.read<SocialLinksCubit>().messageController,
+        controller: cubit.messageController,
         maxLines: null,
         expands: true,
         textAlignVertical: TextAlignVertical.top,
@@ -336,99 +356,72 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
     );
   }
 
-  Widget _buildSocialIcon({required Function() onTap, required Widget child}) {
+  Widget _buildSocialIcon({
+    required VoidCallback onTap,
+    required Widget child,
+  }) {
     return InkWell(
       onTap: onTap,
-      // child: Container(
-      //   width: 55.w,
-      // height: 55.h,
-      // decoration: BoxDecoration(
-      //   color: Colors.transparent,
-      //   borderRadius: BorderRadius.circular(12.r),
-      //   border: Border.all(
-      //     color: const Color.fromARGB(255, 198, 198, 201),
-      //     width: 1,
-      //   ),
-      // ),
+      borderRadius: BorderRadius.circular(12.r),
       child: child,
-      // ),
     );
   }
 }
 
-// ─── Social Icon Painters ────────────────────────────────────────────────────
+// ─── Social Icon Widgets ──────────────────────────────────────────────────────
 
-// LinkedIn
 class _LinkedInIcon extends StatelessWidget {
+  const _LinkedInIcon();
   @override
-  Widget build(BuildContext context) {
-    return AppImage(image: linked, fit: BoxFit.fill, width: 55.w, height: 55.h);
-    // Replace with SvgPicture or Image.asset for exact branding
-  }
+  Widget build(BuildContext context) =>
+      AppImage(image: linked, fit: BoxFit.fill, width: 55.w, height: 55.h);
 }
 
-// X (Twitter)
 class _XIcon extends StatelessWidget {
+  const _XIcon();
   @override
-  Widget build(BuildContext context) {
-    return AppImage(image: x, fit: BoxFit.fill, width: 55.w, height: 55.h);
-  }
+  Widget build(BuildContext context) =>
+      AppImage(image: x, fit: BoxFit.fill, width: 55.w, height: 55.h);
 }
 
-// YouTube
 class _YouTubeIcon extends StatelessWidget {
+  const _YouTubeIcon();
   @override
-  Widget build(BuildContext context) {
-    return AppImage(
-      image: youtube,
-      fit: BoxFit.fill,
-      width: 55.w,
-      height: 55.h,
-    );
-  }
+  Widget build(BuildContext context) =>
+      AppImage(image: youtube, fit: BoxFit.fill, width: 55.w, height: 55.h);
 }
 
-// Facebook
 class _FacebookIcon extends StatelessWidget {
+  const _FacebookIcon();
   @override
-  Widget build(BuildContext context) {
-    return AppImage(
-      image: facebook,
-      fit: BoxFit.fill,
-      width: 55.w,
-      height: 55.h,
-    );
-  }
+  Widget build(BuildContext context) =>
+      AppImage(image: facebook, fit: BoxFit.fill, width: 55.w, height: 55.h);
 }
 
-// TikTok
 class _TikTokIcon extends StatelessWidget {
+  const _TikTokIcon();
   @override
-  Widget build(BuildContext context) {
-    return AppImage(image: tik, fit: BoxFit.fill, width: 55.w, height: 55.h);
-  }
+  Widget build(BuildContext context) =>
+      AppImage(image: tik, fit: BoxFit.fill, width: 55.w, height: 55.h);
 }
 
-// WhatsApp
 class _WhatsAppIcon extends StatelessWidget {
+  const _WhatsAppIcon();
   @override
-  Widget build(BuildContext context) {
-    return AppImage(image: whats, fit: BoxFit.fill, width: 55.w, height: 55.h);
-  }
+  Widget build(BuildContext context) =>
+      AppImage(image: whats, fit: BoxFit.fill, width: 55.w, height: 55.h);
 }
 
-// Instagram
 class _InstagramIcon extends StatelessWidget {
+  const _InstagramIcon();
   @override
-  Widget build(BuildContext context) {
-    return AppImage(image: insta, fit: BoxFit.fill, width: 55.w, height: 55.h);
-  }
+  Widget build(BuildContext context) =>
+      AppImage(image: insta, fit: BoxFit.fill, width: 55.w, height: 55.h);
 }
 
-// Telegram
 class _TelegramIcon extends StatelessWidget {
+  const _TelegramIcon();
   @override
-  Widget build(BuildContext context) {
-    return AppImage(image: tele, fit: BoxFit.fill, width: 55.w, height: 55.h);
-  }
+  Widget build(BuildContext context) =>
+      AppImage(image: tele, fit: BoxFit.fill, width: 55.w, height: 55.h);
 }

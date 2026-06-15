@@ -1,117 +1,101 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'my_orders.g.dart';
+
+@JsonSerializable(explicitToJson: true)
 class MyOrdersResponse {
-  bool? success;
-  String? message;
-  Data? data;
+  final bool success;
+  final String message;
+  final List<dynamic>? extra;
+  final List<OrderItem> items;
+  final Meta meta;
 
-  MyOrdersResponse({this.success, this.message, this.data});
+  MyOrdersResponse({
+    required this.success,
+    required this.message,
+    this.extra,
+    required this.items,
+    required this.meta,
+  });
 
-  MyOrdersResponse.fromJson(Map<String, dynamic> json) {
-    success = json['success'];
-    message = json['message'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
-  }
+  factory MyOrdersResponse.fromJson(
+    Map<String, dynamic> json,
+  ) =>
+      _$MyOrdersResponseFromJson(json);
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['success'] = success;
-    data['message'] = message;
-    if (this.data != null) {
-      data['data'] = this.data!.toJson();
-    }
-    return data;
-  }
+  Map<String, dynamic> toJson() =>
+      _$MyOrdersResponseToJson(this);
 }
 
-class Data {
-  List<Items>? items;
-  Meta? meta;
+@JsonSerializable()
+class OrderItem {
+  final int id;
 
-  Data({this.items, this.meta});
+  @JsonKey(name: 'order_code')
+  final String orderCode;
 
-  Data.fromJson(Map<String, dynamic> json) {
-    if (json['items'] != null) {
-      items = <Items>[];
-      json['items'].forEach((v) {
-        items!.add(new Items.fromJson(v));
-      });
-    }
-    meta = json['meta'] != null ? new Meta.fromJson(json['meta']) : null;
-  }
+  @JsonKey(name: 'items_count')
+  final int itemsCount;
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    if (items != null) {
-      data['items'] = items!.map((v) => v.toJson()).toList();
-    }
-    if (meta != null) {
-      data['meta'] = meta!.toJson();
-    }
-    return data;
-  }
+  final String status;
+
+  @JsonKey(name: 'final_price')
+  final String finalPrice;
+
+  @JsonKey(name: 'created_at')
+  final String createdAt;
+
+  OrderItem({
+    required this.id,
+    required this.orderCode,
+    required this.itemsCount,
+    required this.status,
+    required this.finalPrice,
+    required this.createdAt,
+  });
+
+  factory OrderItem.fromJson(
+    Map<String, dynamic> json,
+  ) =>
+      _$OrderItemFromJson(json);
+
+  Map<String, dynamic> toJson() =>
+      _$OrderItemToJson(this);
 }
 
-class Items {
-  int? id;
-  dynamic orderCode;
-  dynamic itemsCount;
-  dynamic status;
-  dynamic finalPrice;
-
-  Items(
-      {this.id, this.orderCode, this.itemsCount, this.status, this.finalPrice});
-
-  Items.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    orderCode = json['order_code'];
-    itemsCount = json['items_count'];
-    status = json['status'];
-    finalPrice = json['final_price'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    data['order_code'] = orderCode;
-    data['items_count'] = itemsCount;
-    data['status'] = status;
-    data['final_price'] = finalPrice;
-    return data;
-  }
-}
-
+@JsonSerializable()
 class Meta {
-  dynamic currentPage;
-  dynamic lastPage;
-  dynamic perPage;
-  dynamic total;
-  dynamic nextPageUrl;
-  dynamic prevPageUrl;
+  @JsonKey(name: 'current_page')
+  final int currentPage;
 
-  Meta(
-      {this.currentPage,
-        this.lastPage,
-        this.perPage,
-        this.total,
-        this.nextPageUrl,
-        this.prevPageUrl});
+  @JsonKey(name: 'last_page')
+  final int lastPage;
 
-  Meta.fromJson(Map<String, dynamic> json) {
-    currentPage = json['current_page'];
-    lastPage = json['last_page'];
-    perPage = json['per_page'];
-    total = json['total'];
-    nextPageUrl = json['next_page_url'];
-    prevPageUrl = json['prev_page_url'];
-  }
+  @JsonKey(name: 'per_page')
+  final int perPage;
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['current_page'] = currentPage;
-    data['last_page'] = lastPage;
-    data['per_page'] = perPage;
-    data['total'] = total;
-    data['next_page_url'] = nextPageUrl;
-    data['prev_page_url'] = prevPageUrl;
-    return data;
-  }
+  final int total;
+
+  @JsonKey(name: 'next_page_url')
+  final String? nextPageUrl;
+
+  @JsonKey(name: 'prev_page_url')
+  final String? prevPageUrl;
+
+  Meta({
+    required this.currentPage,
+    required this.lastPage,
+    required this.perPage,
+    required this.total,
+    this.nextPageUrl,
+    this.prevPageUrl,
+  });
+
+  factory Meta.fromJson(
+    Map<String, dynamic> json,
+  ) =>
+      _$MetaFromJson(json);
+
+  Map<String, dynamic> toJson() =>
+      _$MetaToJson(this);
 }

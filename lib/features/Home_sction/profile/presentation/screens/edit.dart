@@ -1,16 +1,19 @@
 import 'dart:io';
 import 'package:drug_flow/core/constants/images.dart';
+import 'package:drug_flow/core/constants/screens.dart';
 import 'package:drug_flow/core/localization/lang_keys.dart';
 import 'package:drug_flow/core/utils/helpers.dart';
 import 'package:drug_flow/core/widgets/custom_text_field.dart';
+import 'package:drug_flow/core/widgets/svg_handler.dart';
 import 'package:drug_flow/features/Auths/auth/presentation/widgets/address_text_field.dart';
 import 'package:drug_flow/features/Auths/auth/presentation/widgets/intl_phone_form_field.dart';
+import 'package:drug_flow/features/Auths/auth/presentation/widgets/upload_item_widget.dart';
 import 'package:drug_flow/features/Auths/register/ui/location_drop_down_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
-
+import 'package:go_router/go_router.dart';
 import 'package:drug_flow/features/Home_sction/profile/data/models/update_profile_request_body.dart';
 import 'package:drug_flow/features/Home_sction/profile/presentation/cubit/profile/profile_cubit.dart';
 import 'package:drug_flow/features/Home_sction/profile/presentation/cubit/profile/profile_state.dart';
@@ -61,7 +64,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ScaffoldMessenger.of(
               context,
             ).showSnackBar(const SnackBar(content: Text("تم التحديث بنجاح")));
-            Navigator.pop(context);
+            GoRouter.of(context).go(bottomBarSc);
           },
           error: (msg) {
             ScaffoldMessenger.of(
@@ -86,34 +89,32 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               child: Column(
                 children: [
                   /// ================= IMAGE =================
-                  GestureDetector(
+                  UploadItemWidget(
                     onTap: () => pickImage(false),
-                    child: CircleAvatar(
-                      radius: 50.r,
-                      backgroundColor: colorF7F7F8,
-                      backgroundImage: selectedImage != null
-                          ? FileImage(selectedImage!)
-                          : (cubit.profile?.image != null
-                                    ? NetworkImage(cubit.profile!.image!)
-                                    : null)
-                                as ImageProvider?,
+                    img: camera,
+                    title: context.translate(LangKeys.pharmacyImage),
+                    description: context.translate(
+                      LangKeys.uploadPharmacyImageHint,
                     ),
+                    imageProvider: selectedImage != null
+                        ? FileImage(selectedImage!)
+                        : (cubit.profile?.image?.isNotEmpty == true
+                              ? NetworkImage(cubit.profile!.image!)
+                              : null),
                   ),
-
                   SizedBox(height: 20.h),
-
-                  GestureDetector(
+                  UploadItemWidget(
                     onTap: () => pickImage(true),
-                    child: CircleAvatar(
-                      radius: 50.r,
-                      backgroundColor: colorF7F7F8,
-                      backgroundImage: selectedLicense != null
-                          ? FileImage(selectedLicense!)
-                          : (cubit.profile?.licenseFile != null
-                                    ? NetworkImage(cubit.profile!.licenseFile!)
-                                    : null)
-                                as ImageProvider?,
+                    img: camera,
+                    title: context.translate(LangKeys.licenseImage),
+                    description: context.translate(
+                      LangKeys.uploadLicenseImageHint,
                     ),
+                    imageProvider: selectedLicense != null
+                        ? FileImage(selectedLicense!)
+                        : (cubit.profile?.licenseFile?.isNotEmpty == true
+                              ? NetworkImage(cubit.profile!.licenseFile!)
+                              : null),
                   ),
 
                   SizedBox(height: 20.h),
@@ -184,31 +185,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   SizedBox(height: context.height / 40),
 
                   // ── Landline (optional) ──
-                  IntlPhoneFormField(
-                    countryCodeController: cubit.countryCode3Controller,
-                    controller: cubit.landlineController,
-                    hintTxt: '0212345678',
-                    type: 'phone',
+                  CustomTextField(
+                    controller: cubit.countryCode3Controller,
                     obscure: false,
-                    validator: (_) => null,
-                    textInputType: TextInputType.number,
+                    hintTxt: "2841230",
+                    svgIcon: '',
+                    textInputType: TextInputType.phone,
                     title: context.translate(LangKeys.landlinePhone),
                   ),
+
                   SizedBox(height: context.height / 50),
 
-                  // ── Governorate ──
-                  const GovernorateDropDown(),
-                  SizedBox(height: context.height / 35),
-
-                  // ── City ──
-                  CityDropDown(),
-                  SizedBox(height: context.height / 35),
-
-                  // ── Area ──
-                  const AreaDropDown(),
-                  SizedBox(height: context.height / 30),
-
-                  // ── Detailed address ──
                   AddressTextField(
                     controller: cubit.addressController,
                     obscure: false,
@@ -236,9 +223,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           : () {
                               context.read<ProfileCubit>().updateProfile(
                                 UpdateProfileRequestBody(
-                                  areaId: "1",
-                                  cityId: "1",
-                                  governorateId: "1",
                                   name: cubit.pharmacyController.text,
                                   email: cubit.mailController.text,
                                   phone: cubit.phoneController.text,

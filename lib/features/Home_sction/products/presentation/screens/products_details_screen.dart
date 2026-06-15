@@ -14,6 +14,7 @@ import 'package:drug_flow/features/Home_sction/orders/presentation/cubit/orders/
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:toastification/toastification.dart';
 
 class ProductDetailsScreen extends StatelessWidget {
   final ProductModel product;
@@ -64,38 +65,37 @@ class ProductDetailsScreen extends StatelessWidget {
                       SizedBox(height: 14.h),
 
                       /// Indicator
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: 8.w,
-                            height: 4.h,
-                            decoration: BoxDecoration(
-                              color: const Color(0xffD8D8D8),
-                              borderRadius: BorderRadius.circular(10.r),
-                            ),
-                          ),
-                          SizedBox(width: 4.w),
-                          Container(
-                            width: 18.w,
-                            height: 4.h,
-                            decoration: BoxDecoration(
-                              color: const Color(0xff9FD4E4),
-                              borderRadius: BorderRadius.circular(10.r),
-                            ),
-                          ),
-                          SizedBox(width: 4.w),
-                          Container(
-                            width: 8.w,
-                            height: 4.h,
-                            decoration: BoxDecoration(
-                              color: const Color(0xffD8D8D8),
-                              borderRadius: BorderRadius.circular(10.r),
-                            ),
-                          ),
-                        ],
-                      ),
-
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.center,
+                      //   children: [
+                      //     Container(
+                      //       width: 8.w,
+                      //       height: 4.h,
+                      //       decoration: BoxDecoration(
+                      //         color: const Color(0xffD8D8D8),
+                      //         borderRadius: BorderRadius.circular(10.r),
+                      //       ),
+                      //     ),
+                      //     SizedBox(width: 4.w),
+                      //     Container(
+                      //       width: 18.w,
+                      //       height: 4.h,
+                      //       decoration: BoxDecoration(
+                      //         color: const Color(0xff9FD4E4),
+                      //         borderRadius: BorderRadius.circular(10.r),
+                      //       ),
+                      //     ),
+                      //     SizedBox(width: 4.w),
+                      //     Container(
+                      //       width: 8.w,
+                      //       height: 4.h,
+                      //       decoration: BoxDecoration(
+                      //         color: const Color(0xffD8D8D8),
+                      //         borderRadius: BorderRadius.circular(10.r),
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
                       SizedBox(height: 18.h),
 
                       /// Product Title
@@ -115,7 +115,7 @@ class ProductDetailsScreen extends StatelessWidget {
 
                       /// Category
                       Text(
-                        'اسم القسم',
+                        product.category ?? 'اسم القسم',
                         style: TextStyle(
                           fontSize: 14.sp,
                           color: const Color(0xffB4B4B4),
@@ -125,13 +125,35 @@ class ProductDetailsScreen extends StatelessWidget {
                       SizedBox(height: 8.h),
 
                       /// Tags
-                      Row(
-                        children: [
-                          _TagChip(text: "Paracetamol"),
-                          SizedBox(width: 8.w),
-                          _TagChip(text: "Caffeine"),
-                        ],
-                      ),
+                      if (product.activeIngredients != null &&
+                          product.activeIngredients!.isNotEmpty)
+                        Wrap(
+                          spacing: 4.w,
+                          runSpacing: 2.h,
+                          children: product.activeIngredients!
+                              .map(
+                                (ing) => Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 6.w,
+                                    vertical: 2.h,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: colorF7F7F8,
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Text(
+                                    ing.name ?? "",
+                                    style: TextStyles.textStyleNormal10
+                                        .copyWith(
+                                          color:
+                                              AppColor.partitionNameItemcolor,
+                                        ),
+                                    textScaler: TextScaler.linear(1),
+                                  ),
+                                ),
+                              )
+                              .toList(),
+                        ),
 
                       SizedBox(height: 20.h),
 
@@ -214,7 +236,8 @@ class ProductDetailsScreen extends StatelessWidget {
                             ),
                             child: Center(
                               child: Text(
-                                "خصم ٥٢٪",
+                                "خصم ${product.discountPercentage.toString()} %" ??
+                                    "خصم ٥٢٪",
                                 style: TextStyles.textStyleNormal11.copyWith(
                                   color: colorD50B3E,
                                   fontWeight: FontWeight.w600,
@@ -237,11 +260,22 @@ class ProductDetailsScreen extends StatelessWidget {
                             child: CustomButton(
                               btnTitle: 'شراء الان ',
                               onPressed: () {
-                                context.read<OrdersCubit>().createOrder(
+                                context.read<OrdersCubit>().createDirectOrder(
                                   CreateOrderParams(
                                     cartId: product.id!,
                                     isDrafted: false,
                                   ),
+                                );
+                                toastification.show(
+                                  context: context,
+                                  type: ToastificationType.success,
+                                  style: ToastificationStyle.flat,
+                                  title: Text(
+                                  'تم الشراء بنجاح',
+                                  ),
+
+                                  autoCloseDuration: const Duration(seconds: 3),
+                                  alignment: Alignment.topCenter,
                                 );
                               },
                             ),

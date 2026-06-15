@@ -1,92 +1,130 @@
 class OrderDetailsResponse {
   bool? success;
   String? message;
-  Data? data;
+  OrderDetailsData? data;
 
-  OrderDetailsResponse({this.success, this.message, this.data});
+  OrderDetailsResponse({
+    this.success,
+    this.message,
+    this.data,
+  });
 
   OrderDetailsResponse.fromJson(Map<String, dynamic> json) {
     success = json['success'];
     message = json['message'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null
+        ? OrderDetailsData.fromJson(json['data'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['success'] = success;
-    data['message'] = message;
-    if (this.data != null) {
-      data['data'] = this.data!.toJson();
-    }
-    return data;
+    return {
+      'success': success,
+      'message': message,
+      'data': data?.toJson(),
+    };
   }
 }
 
-class Data {
+class OrderDetailsData {
   int? id;
-  dynamic orderCode;
-  dynamic status;
-  dynamic totalPrice;
-  dynamic discount;
-  dynamic finalPrice;
-  List<Items>? items;
+  String? orderCode;
+  String? status;
+  String? totalPrice;
+  String? discount;
+  String? finalPrice;
+  Warehouse? warehouse;
+  List<OrderItemDetails>? items;
 
-  Data(
-      {this.id,
-        this.orderCode,
-        this.status,
-        this.totalPrice,
-        this.discount,
-        this.finalPrice,
-        this.items});
+  OrderDetailsData({
+    this.id,
+    this.orderCode,
+    this.status,
+    this.totalPrice,
+    this.discount,
+    this.finalPrice,
+    this.warehouse,
+    this.items,
+  });
 
-  Data.fromJson(Map<String, dynamic> json) {
+  OrderDetailsData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     orderCode = json['order_code'];
     status = json['status'];
     totalPrice = json['total_price'];
     discount = json['discount'];
     finalPrice = json['final_price'];
+
+    warehouse = json['warehouse'] != null
+        ? Warehouse.fromJson(json['warehouse'])
+        : null;
+
     if (json['items'] != null) {
-      items = <Items>[];
+      items = <OrderItemDetails>[];
       json['items'].forEach((v) {
-        items!.add(new Items.fromJson(v));
+        items!.add(OrderItemDetails.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    data['order_code'] = orderCode;
-    data['status'] = status;
-    data['total_price'] = totalPrice;
-    data['discount'] = discount;
-    data['final_price'] = finalPrice;
-    if (items != null) {
-      data['items'] = items!.map((v) => v.toJson()).toList();
-    }
-    return data;
+    return {
+      'id': id,
+      'order_code': orderCode,
+      'status': status,
+      'total_price': totalPrice,
+      'discount': discount,
+      'final_price': finalPrice,
+      'warehouse': warehouse?.toJson(),
+      'items': items?.map((e) => e.toJson()).toList(),
+    };
   }
 }
 
-class Items {
+class Warehouse {
   int? id;
-  dynamic productId;
-  dynamic productName;
-  dynamic productImage;
-  dynamic quantity;
-  dynamic price;
+  String? name;
+  String? logo;
 
-  Items(
-      {this.id,
-        this.productId,
-        this.productName,
-        this.productImage,
-        this.quantity,
-        this.price});
+  Warehouse({
+    this.id,
+    this.name,
+    this.logo,
+  });
 
-  Items.fromJson(Map<String, dynamic> json) {
+  Warehouse.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    logo = json['logo'];
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'logo': logo,
+    };
+  }
+}
+
+class OrderItemDetails {
+  int? id;
+  int? productId;
+  String? productName;
+  String? productImage;
+  int? quantity;
+  String? price;
+
+  OrderItemDetails({
+    this.id,
+    this.productId,
+    this.productName,
+    this.productImage,
+    this.quantity,
+    this.price,
+  });
+
+  OrderItemDetails.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     productId = json['product_id'];
     productName = json['product_name'];
@@ -96,13 +134,13 @@ class Items {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    data['product_id'] = productId;
-    data['product_name'] = productName;
-    data['product_image'] = productImage;
-    data['quantity'] = quantity;
-    data['price'] = price;
-    return data;
+    return {
+      'id': id,
+      'product_id': productId,
+      'product_name': productName,
+      'product_image': productImage,
+      'quantity': quantity,
+      'price': price,
+    };
   }
 }

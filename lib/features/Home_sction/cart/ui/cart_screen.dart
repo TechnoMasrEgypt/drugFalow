@@ -1,6 +1,8 @@
 import 'package:drug_flow/core/constants/colors.dart';
+import 'package:drug_flow/core/constants/screens.dart';
 import 'package:drug_flow/core/constants/styles.dart';
-import 'package:drug_flow/core/utils/helpers.dart';
+import 'package:drug_flow/features/Home_sction/cart/data/cart_response.dart';
+import 'package:drug_flow/features/Home_sction/cart/data/update_cart_item_request.dart';
 import 'package:drug_flow/features/Home_sction/cart/ui/bloc/cart_cubit.dart';
 import 'package:drug_flow/features/Home_sction/cart/ui/bloc/cart_state.dart';
 import 'package:drug_flow/features/Home_sction/cart/ui/order_card.dart';
@@ -9,6 +11,8 @@ import 'package:drug_flow/features/Home_sction/orders/presentation/cubit/orders/
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
 
@@ -28,6 +32,42 @@ class _CartScreenState extends State<CartScreen> {
   void _switchTab(bool value) {
     setState(() => isDrafted = value);
     context.read<CartCubit>().getMyCart(isDrafted: value);
+  }
+
+  Widget _buildCartList(List<CartDataModel> carts) {
+    if (carts.isEmpty) {
+      return const Center(child: Text('السلة فارغة 🛒'));
+    }
+
+    return ListView(
+      padding: EdgeInsets.symmetric(horizontal: 16.w),
+      children: [
+        for (final cart in carts)
+          OrderCard(
+            isDrafted: isDrafted,
+            cart: cart,
+            isSaveForLater: isDrafted,
+            onConfirm: () {
+              // context.pop();
+              context.push(ordersSc);
+            },
+            onDelete: () {
+              context.read<CartCubit>().deleteWholeCart(
+                id: cart.id,
+                isDrafted: isDrafted,
+              );
+              // context.pop();
+            },
+            onSaveForLater: () {
+              context.read<CartCubit>().saveCartAsDraft(id: cart.id);
+              // context.pop();
+              print('dadada');
+            },
+
+            onProductTap: () {},
+          ),
+      ],
+    );
   }
 
   @override
@@ -66,8 +106,7 @@ class _CartScreenState extends State<CartScreen> {
           Expanded(
             child: BlocBuilder<CartCubit, CartState>(
               builder: (context, state) {
-
-                // 🔵 LOADING
+                // 🔵 LOADING (initial load only)
                 if (state is CartLoading) {
                   return const Center(child: CircularProgressIndicator());
                 }
@@ -95,49 +134,16 @@ class _CartScreenState extends State<CartScreen> {
 
                 // 🟢 SUCCESS
                 if (state is CartSuccess) {
-                  final carts = state.response.data ?? [];
-
-                  if (carts.isEmpty) {
-                    return const Center(child: Text('السلة فارغة 🛒'));
-                  }
-
-                  return ListView(
-                    padding: EdgeInsets.symmetric(horizontal: 16.w),
-                    children: [
-                      for (final cart in carts)
-                        OrderCard(
-                          cart: cart,
-                          isSaveForLater: isDrafted,
-
-                          onConfirm: () {
-                            context.read<OrdersCubit>().createOrder(
-                              CreateOrderParams(
-                                cartId: cart.id,
-                                isDrafted: isDrafted,
-                              ),
-                            );
-                          },
-
-                          onDelete: () {
-                            context.read<CartCubit>().deleteWholeCart(
-                              id: cart.id,
-                              isDrafted: isDrafted,
-                            );
-                          },
-
-                          onSaveForLater: () {
-                            context.read<CartCubit>().saveCartAsDraft(
-                              id: cart.id,
-                            );
-                          },
-
-                          onProductTap: () {},
-                        ),
-                    ],
-                  );
+                  final carts = state.response.data;
+                  return _buildCartList(carts);
                 }
 
-                // ⚪ fallback (IMPORTANT)
+                // ⚪ fallback: show cached data for updating / intermediate states
+                final cached = context.read<CartCubit>().cartResponse?.data;
+                if (cached != null) {
+                  return _buildCartList(cached);
+                }
+
                 return const SizedBox.shrink();
               },
             ),

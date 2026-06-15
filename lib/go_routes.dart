@@ -1,4 +1,7 @@
 import 'package:drug_flow/core/constants/screens.dart';
+import 'package:drug_flow/features/Auths/auth/domain/entities/reset_password/reset_password_params.dart';
+import 'package:drug_flow/features/Auths/forgot_password/ui/screens/forgot_password_confirmation.dart';
+import 'package:drug_flow/features/Auths/forgot_password/ui/screens/new_password.dart';
 import 'package:drug_flow/features/Auths/otp/ui/otp_screen.dart';
 import 'package:drug_flow/features/Auths/forgot_password/logic/forget_password_cubit.dart';
 import 'package:drug_flow/features/Auths/otp/logic/otp_cubit.dart';
@@ -21,6 +24,7 @@ import 'package:drug_flow/features/Home_sction/home/data/warehouse_response.dart
 import 'package:drug_flow/features/Home_sction/home/logic/home_cubit.dart';
 import 'package:drug_flow/features/Home_sction/home/ui/ware_house_details_screen.dart';
 import 'package:drug_flow/features/Home_sction/notifications/presentation/notification_screen.dart';
+import 'package:drug_flow/features/Home_sction/orders/domain/entities/my_orders/my_orders.dart';
 import 'package:drug_flow/features/Home_sction/orders/presentation/cubit/orders/orders_cubit.dart';
 import 'package:drug_flow/features/Home_sction/orders/presentation/screens/order_details_screen.dart';
 import 'package:drug_flow/features/Home_sction/orders/presentation/screens/orders_screen.dart';
@@ -29,6 +33,7 @@ import 'package:drug_flow/features/Home_sction/profile/presentation/cubit/contac
 import 'package:drug_flow/features/Home_sction/profile/presentation/cubit/coupons/coupons_cubit.dart';
 import 'package:drug_flow/features/Home_sction/profile/presentation/cubit/faqs/faqs_cubit.dart';
 import 'package:drug_flow/features/Home_sction/profile/presentation/cubit/profile/profile_cubit.dart';
+import 'package:drug_flow/features/Home_sction/profile/presentation/screens/change_pass_screem.dart';
 import 'package:drug_flow/features/Home_sction/profile/presentation/screens/contact_us_screen.dart';
 import 'package:drug_flow/features/Home_sction/profile/presentation/screens/coupons_screen.dart';
 import 'package:drug_flow/features/Home_sction/profile/presentation/screens/edit.dart';
@@ -65,6 +70,31 @@ final GoRouter router = GoRouter(
         child: BlocProvider(
           create: (context) => sl<OnboardingCubit>(),
           child: OnBoardingScreen(),
+        ),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(opacity: animation, child: child);
+        },
+      ),
+    ),
+    GoRoute(
+      path: passConSc,
+      pageBuilder: (context, state) => CustomTransitionPage(
+        key: state.pageKey,
+        child: ForgotPasswordConfirmation(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(opacity: animation, child: child);
+        },
+      ),
+    ),
+    GoRoute(
+      path: resetPasswordSc,
+      pageBuilder: (context, state) => CustomTransitionPage(
+        key: state.pageKey,
+        child: BlocProvider(
+          create: (context) => sl<ForgetPasswordCubit>(),
+          child: ResetPasswordScreen(
+            params: state.extra as ResetPasswordParams,
+          ),
         ),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(opacity: animation, child: child);
@@ -134,6 +164,16 @@ final GoRouter router = GoRouter(
           create: (context) => sl<LoginCubit>(),
           child: LoginScreen(),
         ),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(opacity: animation, child: child);
+        },
+      ),
+    ),
+    GoRoute(
+      path: changepssprSc,
+      pageBuilder: (context, state) => CustomTransitionPage(
+        key: state.pageKey,
+        child: ChangePasswordScreen(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(opacity: animation, child: child);
         },
@@ -247,11 +287,14 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: orderDetailsSc,
       pageBuilder: (context, state) {
-        final data = state.extra as OrderModel;
+        final order = state.extra as OrderItem; // ← receives the full OrderItem
 
         return CustomTransitionPage(
           key: state.pageKey,
-          child: OrderDetailScreen(order: data),
+          child: BlocProvider(
+            create: (context) =>  sl<OrdersCubit>(),
+            child: OrderDetailScreen(order: order),
+          ),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return FadeTransition(opacity: animation, child: child);
           },

@@ -1,4 +1,5 @@
 import 'package:drug_flow/core/constants/colors.dart';
+import 'package:drug_flow/core/constants/images.dart';
 import 'package:drug_flow/core/constants/spacing.dart';
 import 'package:drug_flow/core/constants/styles.dart';
 import 'package:drug_flow/core/localization/lang_keys.dart';
@@ -25,7 +26,7 @@ class WarehouseHeader extends StatelessWidget {
             border: Border.all(color: AppColor.shadowColor, width: .1),
           ),
           child: AppImage(
-            image: data.logo ?? "",
+            image: data.logo ?? ware2,
             width: 60.w,
             height: 80.h,
             fit: BoxFit.contain,

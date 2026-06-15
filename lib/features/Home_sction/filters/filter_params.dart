@@ -8,17 +8,20 @@ class FilterParams {
   final List<int> medicineIds;
   final List<int> ingredientIds;
   final String? sort; // e.g. "price_asc"
+  final int? warehouseId; // ← add
 
   const FilterParams({
     this.medicineIds = const [],
     this.ingredientIds = const [],
     this.sort,
+    this.warehouseId = null,
   });
 
   const FilterParams.empty()
       : medicineIds = const [],
         ingredientIds = const [],
-        sort = null;
+        sort = null,
+        warehouseId = null;
 
   /// Converts to Dio-compatible query parameters.
   /// Adjust key names to match your backend.
@@ -27,6 +30,7 @@ class FilterParams {
       if (medicineIds.isNotEmpty) 'medicine_ids[]': medicineIds,
       if (ingredientIds.isNotEmpty) 'ingredient_ids[]': ingredientIds,
       if (sort != null && sort!.isNotEmpty) 'sort': sort,
+      if (warehouseId != null && warehouseId! > 0) 'warehouse_id': warehouseId,
     };
   }
 }

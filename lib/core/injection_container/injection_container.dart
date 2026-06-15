@@ -19,6 +19,7 @@ import 'package:drug_flow/features/Auths/register/logic/register_cubit.dart';
 import 'package:drug_flow/features/Home_sction/bottom_bar/bottom_bar_inj.dart';
 import 'package:drug_flow/features/Home_sction/cart/data/cart_repos.dart';
 import 'package:drug_flow/features/Home_sction/cart/ui/bloc/cart_cubit.dart';
+import 'package:drug_flow/features/Home_sction/filters/filter_cubit.dart';
 import 'package:drug_flow/features/Home_sction/home/data/repos/warehouse_repos.dart';
 import 'package:drug_flow/features/Home_sction/home/logic/home_cubit.dart';
 import 'package:drug_flow/features/Home_sction/home/home_inj.dart';
@@ -71,6 +72,7 @@ Future<void> init() async {
   sl.registerFactory<MedicineSearchCubit>(() => MedicineSearchCubit(sl()));
   // sl.registerFactory<ProductsCubit>(() => ProductsCubit(sl()));
   sl.registerFactory<AppCubit>(() => AppCubit());
+  sl.registerFactory<FilterCubit>(() => FilterCubit(sl()));
 
   // // await initHomeInj(sl);
   // await initNotificationsInj(sl);

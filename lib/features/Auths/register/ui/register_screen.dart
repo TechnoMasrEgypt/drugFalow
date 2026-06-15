@@ -441,7 +441,7 @@ class _TermsCheckbox extends StatelessWidget {
             child: Checkbox(
               value: accepted,
               onChanged: onChanged,
-              activeColor: color121217,
+              activeColor: primaryDark,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(4),
               ),
@@ -460,7 +460,7 @@ class _TermsCheckbox extends StatelessWidget {
                   TextSpan(
                     text: context.translate(LangKeys.termsAndConditions),
                     style: TextStyles.textStyleNormal12.copyWith(
-                      color: color121217,
+                      color: primaryDark,
                       fontWeight: FontWeight.bold,
                       decoration: TextDecoration.underline,
                     ),

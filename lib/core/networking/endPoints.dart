@@ -24,10 +24,12 @@ class ApiConstants {
   static const String deleteCart = "/orders/cart-items/";
   static const String deleteWholeCart = "/orders/cart/";
   static const String createOrder = "/orders/confirm";
+  static const String createDirectOrder = "/orders/confirm-direct";
   static const String createReview = "/orders/review";
   static const String myOrders = "/orders/my-orders";
   static const String orderStatuses = "/orders/statuses";
   static const String orderDetails = "/orders/";
   static const String contactUs = "/contacts";
+  static const String resetPassword = "/auth/reset-password";
 
 }

@@ -48,14 +48,23 @@ class WarehouseRepository {
       return ApiResult.failure(ErrorHandler.handle(e));
     }
   }
-Future<ApiResult<SearchData>> searchMedicines(String query) async {
-  try {
-    final response = await _apiService.searchMedicines(query);
-    return ApiResult.success(response.data);
-  } catch (e) {
-    return ApiResult.failure(ErrorHandler.handle(e));
+
+  Future<ApiResult<SearchData>> searchMedicines(String query) async {
+    try {
+      final response = await _apiService.searchMedicines(query);
+      print("RAW RESPONSE OK");
+
+      final searchResponse = SearchResponse.fromJson(
+        response.data as Map<String, dynamic>,
+      );
+
+      return ApiResult.success(searchResponse.data);
+    } catch (e, s) {
+      print("SEARCH ERROR => $e");
+      print(s);
+      return ApiResult.failure(ErrorHandler.handle(e));
+    }
   }
-}
 
   Future<ApiResult<FilterListResponse>> getActiveIngredients() async {
     try {
@@ -67,7 +76,7 @@ Future<ApiResult<SearchData>> searchMedicines(String query) async {
 
   // ── Products ──────────────────────────────────────────────
 
-   Future<ApiResult<WarehouseDetailsResponse>> warehouseDetails(
+  Future<ApiResult<WarehouseDetailsResponse>> warehouseDetails(
     int id, {
     FilterParams params = const FilterParams.empty(),
   }) async {
@@ -83,7 +92,7 @@ Future<ApiResult<SearchData>> searchMedicines(String query) async {
       return ApiResult.failure(ErrorHandler.handle(e));
     }
   }
- 
+
   Future<ApiResult<List<ProductModel>>> products({
     FilterParams params = const FilterParams.empty(),
   }) async {

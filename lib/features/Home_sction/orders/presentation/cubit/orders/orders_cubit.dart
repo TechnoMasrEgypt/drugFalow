@@ -25,6 +25,10 @@ class OrdersCubit extends Cubit<OrdersState> {
 
     result.when(
       success: (data) {
+        print("SUCCESS");
+        print(data.success);
+        print(data.message);
+        print(data.items?.length);
         myOrders = data;
         emit(OrdersState.success(data));
       },
@@ -56,31 +60,49 @@ class OrdersCubit extends Cubit<OrdersState> {
       },
     );
   }
+
+  Future<void> createDirectOrder(CreateOrderParams body) async {
+    emit(const OrdersState.loading());
+
+    final result = await _repo.createDirectOrder(body);
+
+    result.when(
+      success: (data) {
+        emit(OrdersState.createOrderSuccess(data));
+      },
+      failure: (error) {
+        emit(
+          OrdersState.createOrderError(
+            error.apiErrorModel.message ?? 'Something went wrong',
+          ),
+        );
+      },
+    );
+  }
+
   OrderStatusesResponse? statusesResponse;
 
-Future<void> getOrderStatuses() async {
-  final result = await _repo.getOrderStatuses();
+  Future<void> getOrderStatuses() async {
+    final result = await _repo.getOrderStatuses();
 
-  result.when(
-    success: (data) {
-      statusesResponse = data;
+    result.when(
+      success: (data) {
+        statusesResponse = data;
 
-      emit(
-        OrdersState.orderStatusesSuccess(
-          data,
-        ),
-      );
-    },
-    failure: (error) {
-      emit(
-        OrdersState.orderStatusesError(
-          error.apiErrorModel.message ??
-              'Something went wrong',
-        ),
-      );
-    },
-  );
-}
+        emit(OrdersState.orderStatusesSuccess(data));
+        if (myOrders != null) {
+          emit(OrdersState.success(myOrders!));
+        }
+      },
+      failure: (error) {
+        emit(
+          OrdersState.orderStatusesError(
+            error.apiErrorModel.message ?? 'Something went wrong',
+          ),
+        );
+      },
+    );
+  }
 
   Future<void> createReview(CreateReviewParams body) async {
     final result = await _repo.createReview(body);
@@ -99,6 +121,8 @@ Future<void> getOrderStatuses() async {
     );
   }
 
+  OrderDetailsResponse? orderDetailsResponse;
+
   Future<void> getOrderDetails(int id) async {
     emit(const OrdersState.loading());
 
@@ -106,6 +130,8 @@ Future<void> getOrderStatuses() async {
 
     result.when(
       success: (data) {
+        orderDetailsResponse = data;
+
         emit(OrdersState.orderDetailsSuccess(data));
       },
       failure: (error) {

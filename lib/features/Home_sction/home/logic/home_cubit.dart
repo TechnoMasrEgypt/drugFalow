@@ -5,6 +5,7 @@
 import 'package:drug_flow/core/networking/api_result.dart';
 import 'package:drug_flow/features/Home_sction/filters/filter_params.dart';
 import 'package:drug_flow/features/Home_sction/home/data/repos/warehouse_repos.dart';
+import 'package:drug_flow/features/Home_sction/home/data/slider_response.dart';
 import 'package:drug_flow/features/Home_sction/home/data/warehouse_details_response.dart';
 import 'package:drug_flow/features/Home_sction/home/data/warehouse_response.dart';
 import 'package:drug_flow/features/Home_sction/home/logic/home_state.dart';
@@ -15,6 +16,7 @@ class WarehouseCubit extends Cubit<WarehouseState> {
 
   WarehouseCubit(this._warehouseRepository)
     : super(const WarehouseState.initial());
+  int currentindex = 0;
 
   List<WarehouseItem>? warehouses = [];
 
@@ -56,4 +58,21 @@ WarehouseDetailsResponse? warehouseDetails; // ← change type
       },
     );
   }
+  SliderResponse? sliderResponse;
+
+Future<void> getSlides() async {
+  emit(const WarehouseState.loading());
+
+  final response = await _warehouseRepository.slides();
+
+  response.when(
+    success: (data) {
+      sliderResponse = data;
+      emit(const WarehouseState.initial());
+    },
+    failure: (error) {
+      emit(WarehouseState.error(error: error));
+    },
+  );
+}
 }

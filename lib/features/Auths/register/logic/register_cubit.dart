@@ -20,7 +20,7 @@ class RegisterCubit extends Cubit<RegisterState> {
   final TextEditingController phone3Controller          = TextEditingController();
   final TextEditingController countryCodeController     = TextEditingController(text: '+20');
   final TextEditingController countryCode2Controller    = TextEditingController(text: '+20');
-  final TextEditingController countryCode3Controller    = TextEditingController(text: '+20');
+  final TextEditingController countryCode3Controller    = TextEditingController();
   final TextEditingController addressController         = TextEditingController();
   final TextEditingController passwordController        = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();

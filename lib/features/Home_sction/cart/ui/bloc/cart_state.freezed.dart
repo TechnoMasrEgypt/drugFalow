@@ -55,18 +55,21 @@ extension CartStatePatterns on CartState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Initial value)?  initial,TResult Function( CartLoading value)?  loading,TResult Function( CartSuccess value)?  success,TResult Function( CartError value)?  error,TResult Function( AddToCartSuccess value)?  addToCartSuccess,TResult Function( AddToCartError value)?  addToCartError,TResult Function( UpdateCartSuccess value)?  updateCartSuccess,TResult Function( UpdateCartError value)?  updateCartError,TResult Function( _Updating value)?  updating,TResult Function( DeleteCartSuccess value)?  deleteCartSuccess,TResult Function( DeleteWholeCartSuccess value)?  deleteWholeCartSuccess,TResult Function( DeleteCartError value)?  deleteCartError,TResult Function( DeleteWholeCartError value)?  deleteWholeCartError,TResult Function( SaveCartAsDraftSuccess value)?  saveCartAsDraftSuccess,TResult Function( SaveCartAsDraftError value)?  saveCartAsDraftError,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Initial value)?  initial,TResult Function( CartLoading value)?  loading,TResult Function( CartSuccess value)?  success,TResult Function( CartError value)?  error,TResult Function( CouponLoading value)?  couponLoading,TResult Function( CouponSuccess value)?  couponSuccess,TResult Function( CouponError value)?  couponError,TResult Function( AddToCartSuccess value)?  addToCartSuccess,TResult Function( AddToCartError value)?  addToCartError,TResult Function( UpdateCartSuccess value)?  updateCartSuccess,TResult Function( UpdateCartError value)?  updateCartError,TResult Function( Updating value)?  updating,TResult Function( DeleteCartSuccess value)?  deleteCartSuccess,TResult Function( DeleteWholeCartSuccess value)?  deleteWholeCartSuccess,TResult Function( DeleteCartError value)?  deleteCartError,TResult Function( DeleteWholeCartError value)?  deleteWholeCartError,TResult Function( SaveCartAsDraftSuccess value)?  saveCartAsDraftSuccess,TResult Function( SaveCartAsDraftError value)?  saveCartAsDraftError,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial(_that);case CartLoading() when loading != null:
 return loading(_that);case CartSuccess() when success != null:
 return success(_that);case CartError() when error != null:
-return error(_that);case AddToCartSuccess() when addToCartSuccess != null:
+return error(_that);case CouponLoading() when couponLoading != null:
+return couponLoading(_that);case CouponSuccess() when couponSuccess != null:
+return couponSuccess(_that);case CouponError() when couponError != null:
+return couponError(_that);case AddToCartSuccess() when addToCartSuccess != null:
 return addToCartSuccess(_that);case AddToCartError() when addToCartError != null:
 return addToCartError(_that);case UpdateCartSuccess() when updateCartSuccess != null:
 return updateCartSuccess(_that);case UpdateCartError() when updateCartError != null:
-return updateCartError(_that);case _Updating() when updating != null:
+return updateCartError(_that);case Updating() when updating != null:
 return updating(_that);case DeleteCartSuccess() when deleteCartSuccess != null:
 return deleteCartSuccess(_that);case DeleteWholeCartSuccess() when deleteWholeCartSuccess != null:
 return deleteWholeCartSuccess(_that);case DeleteCartError() when deleteCartError != null:
@@ -91,18 +94,21 @@ return saveCartAsDraftError(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Initial value)  initial,required TResult Function( CartLoading value)  loading,required TResult Function( CartSuccess value)  success,required TResult Function( CartError value)  error,required TResult Function( AddToCartSuccess value)  addToCartSuccess,required TResult Function( AddToCartError value)  addToCartError,required TResult Function( UpdateCartSuccess value)  updateCartSuccess,required TResult Function( UpdateCartError value)  updateCartError,required TResult Function( _Updating value)  updating,required TResult Function( DeleteCartSuccess value)  deleteCartSuccess,required TResult Function( DeleteWholeCartSuccess value)  deleteWholeCartSuccess,required TResult Function( DeleteCartError value)  deleteCartError,required TResult Function( DeleteWholeCartError value)  deleteWholeCartError,required TResult Function( SaveCartAsDraftSuccess value)  saveCartAsDraftSuccess,required TResult Function( SaveCartAsDraftError value)  saveCartAsDraftError,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Initial value)  initial,required TResult Function( CartLoading value)  loading,required TResult Function( CartSuccess value)  success,required TResult Function( CartError value)  error,required TResult Function( CouponLoading value)  couponLoading,required TResult Function( CouponSuccess value)  couponSuccess,required TResult Function( CouponError value)  couponError,required TResult Function( AddToCartSuccess value)  addToCartSuccess,required TResult Function( AddToCartError value)  addToCartError,required TResult Function( UpdateCartSuccess value)  updateCartSuccess,required TResult Function( UpdateCartError value)  updateCartError,required TResult Function( Updating value)  updating,required TResult Function( DeleteCartSuccess value)  deleteCartSuccess,required TResult Function( DeleteWholeCartSuccess value)  deleteWholeCartSuccess,required TResult Function( DeleteCartError value)  deleteCartError,required TResult Function( DeleteWholeCartError value)  deleteWholeCartError,required TResult Function( SaveCartAsDraftSuccess value)  saveCartAsDraftSuccess,required TResult Function( SaveCartAsDraftError value)  saveCartAsDraftError,}){
 final _that = this;
 switch (_that) {
 case _Initial():
 return initial(_that);case CartLoading():
 return loading(_that);case CartSuccess():
 return success(_that);case CartError():
-return error(_that);case AddToCartSuccess():
+return error(_that);case CouponLoading():
+return couponLoading(_that);case CouponSuccess():
+return couponSuccess(_that);case CouponError():
+return couponError(_that);case AddToCartSuccess():
 return addToCartSuccess(_that);case AddToCartError():
 return addToCartError(_that);case UpdateCartSuccess():
 return updateCartSuccess(_that);case UpdateCartError():
-return updateCartError(_that);case _Updating():
+return updateCartError(_that);case Updating():
 return updating(_that);case DeleteCartSuccess():
 return deleteCartSuccess(_that);case DeleteWholeCartSuccess():
 return deleteWholeCartSuccess(_that);case DeleteCartError():
@@ -126,18 +132,21 @@ return saveCartAsDraftError(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Initial value)?  initial,TResult? Function( CartLoading value)?  loading,TResult? Function( CartSuccess value)?  success,TResult? Function( CartError value)?  error,TResult? Function( AddToCartSuccess value)?  addToCartSuccess,TResult? Function( AddToCartError value)?  addToCartError,TResult? Function( UpdateCartSuccess value)?  updateCartSuccess,TResult? Function( UpdateCartError value)?  updateCartError,TResult? Function( _Updating value)?  updating,TResult? Function( DeleteCartSuccess value)?  deleteCartSuccess,TResult? Function( DeleteWholeCartSuccess value)?  deleteWholeCartSuccess,TResult? Function( DeleteCartError value)?  deleteCartError,TResult? Function( DeleteWholeCartError value)?  deleteWholeCartError,TResult? Function( SaveCartAsDraftSuccess value)?  saveCartAsDraftSuccess,TResult? Function( SaveCartAsDraftError value)?  saveCartAsDraftError,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Initial value)?  initial,TResult? Function( CartLoading value)?  loading,TResult? Function( CartSuccess value)?  success,TResult? Function( CartError value)?  error,TResult? Function( CouponLoading value)?  couponLoading,TResult? Function( CouponSuccess value)?  couponSuccess,TResult? Function( CouponError value)?  couponError,TResult? Function( AddToCartSuccess value)?  addToCartSuccess,TResult? Function( AddToCartError value)?  addToCartError,TResult? Function( UpdateCartSuccess value)?  updateCartSuccess,TResult? Function( UpdateCartError value)?  updateCartError,TResult? Function( Updating value)?  updating,TResult? Function( DeleteCartSuccess value)?  deleteCartSuccess,TResult? Function( DeleteWholeCartSuccess value)?  deleteWholeCartSuccess,TResult? Function( DeleteCartError value)?  deleteCartError,TResult? Function( DeleteWholeCartError value)?  deleteWholeCartError,TResult? Function( SaveCartAsDraftSuccess value)?  saveCartAsDraftSuccess,TResult? Function( SaveCartAsDraftError value)?  saveCartAsDraftError,}){
 final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial(_that);case CartLoading() when loading != null:
 return loading(_that);case CartSuccess() when success != null:
 return success(_that);case CartError() when error != null:
-return error(_that);case AddToCartSuccess() when addToCartSuccess != null:
+return error(_that);case CouponLoading() when couponLoading != null:
+return couponLoading(_that);case CouponSuccess() when couponSuccess != null:
+return couponSuccess(_that);case CouponError() when couponError != null:
+return couponError(_that);case AddToCartSuccess() when addToCartSuccess != null:
 return addToCartSuccess(_that);case AddToCartError() when addToCartError != null:
 return addToCartError(_that);case UpdateCartSuccess() when updateCartSuccess != null:
 return updateCartSuccess(_that);case UpdateCartError() when updateCartError != null:
-return updateCartError(_that);case _Updating() when updating != null:
+return updateCartError(_that);case Updating() when updating != null:
 return updating(_that);case DeleteCartSuccess() when deleteCartSuccess != null:
 return deleteCartSuccess(_that);case DeleteWholeCartSuccess() when deleteWholeCartSuccess != null:
 return deleteWholeCartSuccess(_that);case DeleteCartError() when deleteCartError != null:
@@ -161,17 +170,20 @@ return saveCartAsDraftError(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( CartResponseModel response)?  success,TResult Function( String message)?  error,TResult Function( CartResponseModel response)?  addToCartSuccess,TResult Function( String message)?  addToCartError,TResult Function( CartResponseModel response)?  updateCartSuccess,TResult Function( String message)?  updateCartError,TResult Function()?  updating,TResult Function()?  deleteCartSuccess,TResult Function()?  deleteWholeCartSuccess,TResult Function( String message)?  deleteCartError,TResult Function( String message)?  deleteWholeCartError,TResult Function( CartResponseModel response)?  saveCartAsDraftSuccess,TResult Function( String message)?  saveCartAsDraftError,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( CartResponseModel response)?  success,TResult Function( String message)?  error,TResult Function()?  couponLoading,TResult Function( CouponResponseModel response)?  couponSuccess,TResult Function( String message)?  couponError,TResult Function( CartResponseModel response)?  addToCartSuccess,TResult Function( String message)?  addToCartError,TResult Function( CartResponseModel response)?  updateCartSuccess,TResult Function( String message)?  updateCartError,TResult Function()?  updating,TResult Function()?  deleteCartSuccess,TResult Function()?  deleteWholeCartSuccess,TResult Function( String message)?  deleteCartError,TResult Function( String message)?  deleteWholeCartError,TResult Function( CartResponseModel response)?  saveCartAsDraftSuccess,TResult Function( String message)?  saveCartAsDraftError,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case CartLoading() when loading != null:
 return loading();case CartSuccess() when success != null:
 return success(_that.response);case CartError() when error != null:
-return error(_that.message);case AddToCartSuccess() when addToCartSuccess != null:
+return error(_that.message);case CouponLoading() when couponLoading != null:
+return couponLoading();case CouponSuccess() when couponSuccess != null:
+return couponSuccess(_that.response);case CouponError() when couponError != null:
+return couponError(_that.message);case AddToCartSuccess() when addToCartSuccess != null:
 return addToCartSuccess(_that.response);case AddToCartError() when addToCartError != null:
 return addToCartError(_that.message);case UpdateCartSuccess() when updateCartSuccess != null:
 return updateCartSuccess(_that.response);case UpdateCartError() when updateCartError != null:
-return updateCartError(_that.message);case _Updating() when updating != null:
+return updateCartError(_that.message);case Updating() when updating != null:
 return updating();case DeleteCartSuccess() when deleteCartSuccess != null:
 return deleteCartSuccess();case DeleteWholeCartSuccess() when deleteWholeCartSuccess != null:
 return deleteWholeCartSuccess();case DeleteCartError() when deleteCartError != null:
@@ -196,17 +208,20 @@ return saveCartAsDraftError(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( CartResponseModel response)  success,required TResult Function( String message)  error,required TResult Function( CartResponseModel response)  addToCartSuccess,required TResult Function( String message)  addToCartError,required TResult Function( CartResponseModel response)  updateCartSuccess,required TResult Function( String message)  updateCartError,required TResult Function()  updating,required TResult Function()  deleteCartSuccess,required TResult Function()  deleteWholeCartSuccess,required TResult Function( String message)  deleteCartError,required TResult Function( String message)  deleteWholeCartError,required TResult Function( CartResponseModel response)  saveCartAsDraftSuccess,required TResult Function( String message)  saveCartAsDraftError,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( CartResponseModel response)  success,required TResult Function( String message)  error,required TResult Function()  couponLoading,required TResult Function( CouponResponseModel response)  couponSuccess,required TResult Function( String message)  couponError,required TResult Function( CartResponseModel response)  addToCartSuccess,required TResult Function( String message)  addToCartError,required TResult Function( CartResponseModel response)  updateCartSuccess,required TResult Function( String message)  updateCartError,required TResult Function()  updating,required TResult Function()  deleteCartSuccess,required TResult Function()  deleteWholeCartSuccess,required TResult Function( String message)  deleteCartError,required TResult Function( String message)  deleteWholeCartError,required TResult Function( CartResponseModel response)  saveCartAsDraftSuccess,required TResult Function( String message)  saveCartAsDraftError,}) {final _that = this;
 switch (_that) {
 case _Initial():
 return initial();case CartLoading():
 return loading();case CartSuccess():
 return success(_that.response);case CartError():
-return error(_that.message);case AddToCartSuccess():
+return error(_that.message);case CouponLoading():
+return couponLoading();case CouponSuccess():
+return couponSuccess(_that.response);case CouponError():
+return couponError(_that.message);case AddToCartSuccess():
 return addToCartSuccess(_that.response);case AddToCartError():
 return addToCartError(_that.message);case UpdateCartSuccess():
 return updateCartSuccess(_that.response);case UpdateCartError():
-return updateCartError(_that.message);case _Updating():
+return updateCartError(_that.message);case Updating():
 return updating();case DeleteCartSuccess():
 return deleteCartSuccess();case DeleteWholeCartSuccess():
 return deleteWholeCartSuccess();case DeleteCartError():
@@ -230,17 +245,20 @@ return saveCartAsDraftError(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( CartResponseModel response)?  success,TResult? Function( String message)?  error,TResult? Function( CartResponseModel response)?  addToCartSuccess,TResult? Function( String message)?  addToCartError,TResult? Function( CartResponseModel response)?  updateCartSuccess,TResult? Function( String message)?  updateCartError,TResult? Function()?  updating,TResult? Function()?  deleteCartSuccess,TResult? Function()?  deleteWholeCartSuccess,TResult? Function( String message)?  deleteCartError,TResult? Function( String message)?  deleteWholeCartError,TResult? Function( CartResponseModel response)?  saveCartAsDraftSuccess,TResult? Function( String message)?  saveCartAsDraftError,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( CartResponseModel response)?  success,TResult? Function( String message)?  error,TResult? Function()?  couponLoading,TResult? Function( CouponResponseModel response)?  couponSuccess,TResult? Function( String message)?  couponError,TResult? Function( CartResponseModel response)?  addToCartSuccess,TResult? Function( String message)?  addToCartError,TResult? Function( CartResponseModel response)?  updateCartSuccess,TResult? Function( String message)?  updateCartError,TResult? Function()?  updating,TResult? Function()?  deleteCartSuccess,TResult? Function()?  deleteWholeCartSuccess,TResult? Function( String message)?  deleteCartError,TResult? Function( String message)?  deleteWholeCartError,TResult? Function( CartResponseModel response)?  saveCartAsDraftSuccess,TResult? Function( String message)?  saveCartAsDraftError,}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case CartLoading() when loading != null:
 return loading();case CartSuccess() when success != null:
 return success(_that.response);case CartError() when error != null:
-return error(_that.message);case AddToCartSuccess() when addToCartSuccess != null:
+return error(_that.message);case CouponLoading() when couponLoading != null:
+return couponLoading();case CouponSuccess() when couponSuccess != null:
+return couponSuccess(_that.response);case CouponError() when couponError != null:
+return couponError(_that.message);case AddToCartSuccess() when addToCartSuccess != null:
 return addToCartSuccess(_that.response);case AddToCartError() when addToCartError != null:
 return addToCartError(_that.message);case UpdateCartSuccess() when updateCartSuccess != null:
 return updateCartSuccess(_that.response);case UpdateCartError() when updateCartError != null:
-return updateCartError(_that.message);case _Updating() when updating != null:
+return updateCartError(_that.message);case Updating() when updating != null:
 return updating();case DeleteCartSuccess() when deleteCartSuccess != null:
 return deleteCartSuccess();case DeleteWholeCartSuccess() when deleteWholeCartSuccess != null:
 return deleteWholeCartSuccess();case DeleteCartError() when deleteCartError != null:
@@ -443,6 +461,170 @@ class _$CartErrorCopyWithImpl<$Res>
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') $Res call({Object? message = null,}) {
   return _then(CartError(
+null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class CouponLoading implements CartState {
+  const CouponLoading();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CouponLoading);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'CartState.couponLoading()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class CouponSuccess implements CartState {
+  const CouponSuccess(this.response);
+  
+
+ final  CouponResponseModel response;
+
+/// Create a copy of CartState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$CouponSuccessCopyWith<CouponSuccess> get copyWith => _$CouponSuccessCopyWithImpl<CouponSuccess>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CouponSuccess&&(identical(other.response, response) || other.response == response));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,response);
+
+@override
+String toString() {
+  return 'CartState.couponSuccess(response: $response)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $CouponSuccessCopyWith<$Res> implements $CartStateCopyWith<$Res> {
+  factory $CouponSuccessCopyWith(CouponSuccess value, $Res Function(CouponSuccess) _then) = _$CouponSuccessCopyWithImpl;
+@useResult
+$Res call({
+ CouponResponseModel response
+});
+
+
+
+
+}
+/// @nodoc
+class _$CouponSuccessCopyWithImpl<$Res>
+    implements $CouponSuccessCopyWith<$Res> {
+  _$CouponSuccessCopyWithImpl(this._self, this._then);
+
+  final CouponSuccess _self;
+  final $Res Function(CouponSuccess) _then;
+
+/// Create a copy of CartState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? response = null,}) {
+  return _then(CouponSuccess(
+null == response ? _self.response : response // ignore: cast_nullable_to_non_nullable
+as CouponResponseModel,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class CouponError implements CartState {
+  const CouponError(this.message);
+  
+
+ final  String message;
+
+/// Create a copy of CartState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$CouponErrorCopyWith<CouponError> get copyWith => _$CouponErrorCopyWithImpl<CouponError>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CouponError&&(identical(other.message, message) || other.message == message));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,message);
+
+@override
+String toString() {
+  return 'CartState.couponError(message: $message)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $CouponErrorCopyWith<$Res> implements $CartStateCopyWith<$Res> {
+  factory $CouponErrorCopyWith(CouponError value, $Res Function(CouponError) _then) = _$CouponErrorCopyWithImpl;
+@useResult
+$Res call({
+ String message
+});
+
+
+
+
+}
+/// @nodoc
+class _$CouponErrorCopyWithImpl<$Res>
+    implements $CouponErrorCopyWith<$Res> {
+  _$CouponErrorCopyWithImpl(this._self, this._then);
+
+  final CouponError _self;
+  final $Res Function(CouponError) _then;
+
+/// Create a copy of CartState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? message = null,}) {
+  return _then(CouponError(
 null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
 as String,
   ));
@@ -718,8 +900,8 @@ as String,
 /// @nodoc
 
 
-class _Updating implements CartState {
-  const _Updating();
+class Updating implements CartState {
+  const Updating();
   
 
 
@@ -729,7 +911,7 @@ class _Updating implements CartState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Updating);
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Updating);
 }
 
 

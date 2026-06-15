@@ -59,7 +59,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       horizontal: 14,
                     ),
                     decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 247, 242, 242),
+                      color: const Color.fromARGB(255, 253, 252, 252),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Row(
@@ -103,18 +103,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           _sectionCard(
                             children: [
                               GestureDetector(
-                                onTap: () {
-                                  context.push(
+                                onTap: () async {
+                                  await context.push(
                                     personalInfoSc,
                                     extra: context.read<ProfileCubit>(),
                                   );
+                                  if (context.mounted) {
+                                    context
+                                        .read<ProfileCubit>()
+                                        .getProfile(); // refreshes name card on ProfileScreen
+                                  }
                                 },
                                 child: _MenuItem(
                                   image: useer,
                                   title: 'البيانات الشخصية',
                                 ),
                               ),
-                              _MenuItem(image: passw, title: 'كلمة المرور'),
+                              GestureDetector(
+                                onTap: () {
+                                  context.push(changepssprSc);
+                                },
+                                child: _MenuItem(
+                                  image: passw,
+                                  title: 'كلمة المرور',
+                                ),
+                              ),
                               GestureDetector(
                                 onTap: () {
                                   context.push(ordersSc);
@@ -195,6 +208,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     height: 52,
                     child: ElevatedButton(
                       onPressed: () {
+                        context.read<ProfileCubit>().logout();
                         context.push(loginSc);
                       },
                       style: ElevatedButton.styleFrom(

@@ -1,3 +1,4 @@
+import 'package:drug_flow/core/utils/shared_prefrence_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -5,6 +6,7 @@ import 'package:drug_flow/core/networking/api_result.dart';
 import 'package:drug_flow/features/Home_sction/profile/data/get_profile/profile_response.dart';
 import 'package:drug_flow/features/Home_sction/profile/data/logic/profile_repo.dart';
 import 'package:drug_flow/features/Home_sction/profile/data/models/update_profile_request_body.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'profile_state.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
@@ -30,9 +32,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   final TextEditingController countryCode2Controller = TextEditingController(
     text: '+20',
   );
-  final TextEditingController countryCode3Controller = TextEditingController(
-    text: '+20',
-  );
+  final TextEditingController countryCode3Controller = TextEditingController();
   // ─────────────────────────────
   // Get Profile
   // ─────────────────────────────
@@ -74,14 +74,15 @@ class ProfileCubit extends Cubit<ProfileState> {
   // Update Profile
   // ─────────────────────────────
   Future<void> updateProfile(UpdateProfileRequestBody body) async {
-    emit(const ProfileState.loading());
+    emit(const ProfileState.updateloading());
 
     final result = await _repo.updateProfile(body);
 
     result.when(
       success: (data) async {
-        profile = data.data;
-
+        profile = data;
+        // setProfile(profile!); // ← keep controllers in sync with new data
+        print("FILTER DONE");
         emit(ProfileState.updateSuccess(profile!));
         // await getProfile();
       },
@@ -110,6 +111,27 @@ class ProfileCubit extends Cubit<ProfileState> {
       },
       failure: (error) {
         emit(ProfileState.error(error.apiErrorModel.message ?? 'Error'));
+      },
+    );
+  }
+
+  Future<void> logout() async {
+    emit(const ProfileState.logoutLoading());
+
+    final result = await _repo.logout();
+
+    result.when(
+      success: (data) async {
+        await FlutterSecureStorage().delete(key: SharedPrefKeys.userToken);
+
+        emit(ProfileState.logoutSuccess(data.message));
+      },
+      failure: (error) {
+        emit(
+          ProfileState.logoutError(
+            error.apiErrorModel.message ?? 'Logout Failed',
+          ),
+        );
       },
     );
   }

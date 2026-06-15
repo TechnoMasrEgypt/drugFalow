@@ -8,6 +8,7 @@ import 'package:drug_flow/features/Home_sction/profile/data/contact_response.dar
 import 'package:drug_flow/features/Home_sction/profile/data/coupon_response.dart';
 import 'package:drug_flow/features/Home_sction/profile/data/faqs_response.dart';
 import 'package:drug_flow/features/Home_sction/profile/data/get_profile/profile_response.dart';
+import 'package:drug_flow/features/Home_sction/profile/data/logout_response.dart';
 import 'package:drug_flow/features/Home_sction/profile/data/models/update_profile_request_body.dart';
 import 'package:drug_flow/features/Home_sction/profile/data/social_links_response.dart';
 import 'package:flutter/material.dart';
@@ -37,13 +38,13 @@ class ProfileRepo {
     }
   }
 
-  Future<ApiResult<ProfileResponse>> updateProfile(
+  Future<ApiResult<ProfileData>> updateProfile(
     UpdateProfileRequestBody body,
   ) async {
     try {
       final response = await _apiService.updateProfile(body);
 
-      return ApiResult.success(response );
+      return ApiResult.success(response.data! );
     } catch (e, s) {
       debugPrint('UPDATE PROFILE ERROR => $e');
       debugPrintStack(stackTrace: s);
@@ -95,4 +96,14 @@ class ProfileRepo {
       return ApiResult.failure(ErrorHandler.handle(e));
     }
   }
+
+  Future<ApiResult<LogoutResponse>> logout() async {
+  try {
+    final response = await _apiService.logout();
+
+    return ApiResult.success(response);
+  } catch (e) {
+    return ApiResult.failure(ErrorHandler.handle(e));
+  }
+}
 }

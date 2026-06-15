@@ -74,7 +74,9 @@ CartItemModel _$CartItemModelFromJson(Map<String, dynamic> json) =>
       medicineId: (json['medicine_id'] as num).toInt(),
       oldWarehouseId: (json['old_warehouse_id'] as num).toInt(),
       productId: (json['product_id'] as num).toInt(),
-      transferWarehouses: json['transfer_warehouses'] as List<dynamic>,
+      transferWarehouses: const TransferWarehousesConverter().fromJson(
+        json['transfer_warehouses'],
+      ),
     );
 
 Map<String, dynamic> _$CartItemModelToJson(CartItemModel instance) =>
@@ -87,7 +89,9 @@ Map<String, dynamic> _$CartItemModelToJson(CartItemModel instance) =>
       'medicine_id': instance.medicineId,
       'old_warehouse_id': instance.oldWarehouseId,
       'product_id': instance.productId,
-      'transfer_warehouses': instance.transferWarehouses,
+      'transfer_warehouses': const TransferWarehousesConverter().toJson(
+        instance.transferWarehouses,
+      ),
     };
 
 CartProductModel _$CartProductModelFromJson(Map<String, dynamic> json) =>

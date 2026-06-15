@@ -2,6 +2,9 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'cart_response.g.dart';
 
+/// ─────────────────────────────────────────────
+/// RESPONSE MODEL
+/// ─────────────────────────────────────────────
 @JsonSerializable(explicitToJson: true)
 class CartResponseModel {
   final bool success;
@@ -20,10 +23,12 @@ class CartResponseModel {
   Map<String, dynamic> toJson() => _$CartResponseModelToJson(this);
 }
 
+/// ─────────────────────────────────────────────
+/// CART DATA MODEL
+/// ─────────────────────────────────────────────
 @JsonSerializable(explicitToJson: true)
 class CartDataModel {
   final int id;
-
   final WarehouseModel warehouse;
 
   @JsonKey(name: 'is_drafted')
@@ -56,6 +61,9 @@ class CartDataModel {
   Map<String, dynamic> toJson() => _$CartDataModelToJson(this);
 }
 
+/// ─────────────────────────────────────────────
+/// WAREHOUSE MODEL
+/// ─────────────────────────────────────────────
 @JsonSerializable()
 class WarehouseModel {
   final int id;
@@ -74,6 +82,66 @@ class WarehouseModel {
   Map<String, dynamic> toJson() => _$WarehouseModelToJson(this);
 }
 
+/// ─────────────────────────────────────────────
+/// TRANSFER WAREHOUSE MODEL
+/// ─────────────────────────────────────────────
+class TransferWarehouseModel {
+  final int id;
+  final String name;
+
+  TransferWarehouseModel({
+    required this.id,
+    required this.name,
+  });
+
+  factory TransferWarehouseModel.fromJson(Map<String, dynamic> json) {
+    return TransferWarehouseModel(
+      id: json['id'],
+      name: json['name'],
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'name': name,
+      };
+}
+
+/// ─────────────────────────────────────────────
+/// CONVERTER (FIX MAP + LIST ISSUE)
+/// ─────────────────────────────────────────────
+class TransferWarehousesConverter
+    implements JsonConverter<List<TransferWarehouseModel>, dynamic> {
+  const TransferWarehousesConverter();
+
+  @override
+  List<TransferWarehouseModel> fromJson(dynamic json) {
+    if (json == null) return [];
+
+    if (json is List) {
+      return json
+          .map((e) => TransferWarehouseModel.fromJson(e))
+          .toList();
+    }
+
+    if (json is Map) {
+      return json.values
+          .map((e) => TransferWarehouseModel.fromJson(e))
+          .toList();
+    }
+
+    return [];
+  }
+
+  @override
+  dynamic toJson(List<TransferWarehouseModel> object) {
+    return object.map((e) => e.toJson()).toList();
+  }
+}
+
+/// ─────────────────────────────────────────────
+/// CART ITEM MODEL
+/// ─────────────────────────────────────────────
 @JsonSerializable(explicitToJson: true)
 class CartItemModel {
   final int id;
@@ -97,8 +165,10 @@ class CartItemModel {
   @JsonKey(name: 'product_id')
   final int productId;
 
+  /// 🔥 FIXED FIELD
+  @TransferWarehousesConverter()
   @JsonKey(name: 'transfer_warehouses')
-  final List<dynamic> transferWarehouses;
+  final List<TransferWarehouseModel> transferWarehouses;
 
   CartItemModel({
     required this.id,
@@ -118,14 +188,14 @@ class CartItemModel {
   Map<String, dynamic> toJson() => _$CartItemModelToJson(this);
 }
 
+/// ─────────────────────────────────────────────
+/// PRODUCT MODEL
+/// ─────────────────────────────────────────────
 @JsonSerializable(explicitToJson: true)
 class CartProductModel {
   final int id;
-
   final String name;
-
   final String image;
-
   final String price;
 
   @JsonKey(name: 'price_before_discount')
@@ -153,6 +223,9 @@ class CartProductModel {
   Map<String, dynamic> toJson() => _$CartProductModelToJson(this);
 }
 
+/// ─────────────────────────────────────────────
+/// ACTIVE INGREDIENT MODEL
+/// ─────────────────────────────────────────────
 @JsonSerializable()
 class ActiveIngredientModel {
   final int id;

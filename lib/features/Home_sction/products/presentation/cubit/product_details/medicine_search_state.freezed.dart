@@ -131,12 +131,12 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  idle,TResult Function()?  loading,TResult Function( List<SearchProductModel> results)?  success,TResult Function()?  empty,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  idle,TResult Function()?  loading,TResult Function( List<SearchProductModel> results,  List<SearchWarehouse> warehouse)?  success,TResult Function()?  empty,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case Idle() when idle != null:
 return idle();case Loading() when loading != null:
 return loading();case Success() when success != null:
-return success(_that.results);case _Empty() when empty != null:
+return success(_that.results,_that.warehouse);case _Empty() when empty != null:
 return empty();case _Error() when error != null:
 return error(_that.message);case _:
   return orElse();
@@ -156,12 +156,12 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  idle,required TResult Function()  loading,required TResult Function( List<SearchProductModel> results)  success,required TResult Function()  empty,required TResult Function( String message)  error,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  idle,required TResult Function()  loading,required TResult Function( List<SearchProductModel> results,  List<SearchWarehouse> warehouse)  success,required TResult Function()  empty,required TResult Function( String message)  error,}) {final _that = this;
 switch (_that) {
 case Idle():
 return idle();case Loading():
 return loading();case Success():
-return success(_that.results);case _Empty():
+return success(_that.results,_that.warehouse);case _Empty():
 return empty();case _Error():
 return error(_that.message);case _:
   throw StateError('Unexpected subclass');
@@ -180,12 +180,12 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  idle,TResult? Function()?  loading,TResult? Function( List<SearchProductModel> results)?  success,TResult? Function()?  empty,TResult? Function( String message)?  error,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  idle,TResult? Function()?  loading,TResult? Function( List<SearchProductModel> results,  List<SearchWarehouse> warehouse)?  success,TResult? Function()?  empty,TResult? Function( String message)?  error,}) {final _that = this;
 switch (_that) {
 case Idle() when idle != null:
 return idle();case Loading() when loading != null:
 return loading();case Success() when success != null:
-return success(_that.results);case _Empty() when empty != null:
+return success(_that.results,_that.warehouse);case _Empty() when empty != null:
 return empty();case _Error() when error != null:
 return error(_that.message);case _:
   return null;
@@ -263,7 +263,7 @@ String toString() {
 
 
 class Success implements MedicineSearchState {
-  const Success({required final  List<SearchProductModel> results}): _results = results;
+  const Success({required final  List<SearchProductModel> results, required final  List<SearchWarehouse> warehouse}): _results = results,_warehouse = warehouse;
   
 
  final  List<SearchProductModel> _results;
@@ -271,6 +271,13 @@ class Success implements MedicineSearchState {
   if (_results is EqualUnmodifiableListView) return _results;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_results);
+}
+
+ final  List<SearchWarehouse> _warehouse;
+ List<SearchWarehouse> get warehouse {
+  if (_warehouse is EqualUnmodifiableListView) return _warehouse;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_warehouse);
 }
 
 
@@ -284,16 +291,16 @@ $SuccessCopyWith<Success> get copyWith => _$SuccessCopyWithImpl<Success>(this, _
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Success&&const DeepCollectionEquality().equals(other._results, _results));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Success&&const DeepCollectionEquality().equals(other._results, _results)&&const DeepCollectionEquality().equals(other._warehouse, _warehouse));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_results));
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_results),const DeepCollectionEquality().hash(_warehouse));
 
 @override
 String toString() {
-  return 'MedicineSearchState.success(results: $results)';
+  return 'MedicineSearchState.success(results: $results, warehouse: $warehouse)';
 }
 
 
@@ -304,7 +311,7 @@ abstract mixin class $SuccessCopyWith<$Res> implements $MedicineSearchStateCopyW
   factory $SuccessCopyWith(Success value, $Res Function(Success) _then) = _$SuccessCopyWithImpl;
 @useResult
 $Res call({
- List<SearchProductModel> results
+ List<SearchProductModel> results, List<SearchWarehouse> warehouse
 });
 
 
@@ -321,10 +328,11 @@ class _$SuccessCopyWithImpl<$Res>
 
 /// Create a copy of MedicineSearchState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? results = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? results = null,Object? warehouse = null,}) {
   return _then(Success(
 results: null == results ? _self._results : results // ignore: cast_nullable_to_non_nullable
-as List<SearchProductModel>,
+as List<SearchProductModel>,warehouse: null == warehouse ? _self._warehouse : warehouse // ignore: cast_nullable_to_non_nullable
+as List<SearchWarehouse>,
   ));
 }
 

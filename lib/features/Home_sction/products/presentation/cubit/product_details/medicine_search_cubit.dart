@@ -38,7 +38,8 @@ class MedicineSearchCubit extends Cubit<MedicineSearchState> {
       success: (data) {
         lastResults = data.products;
         lastWarehouses = data.warehouses;
-        emit(MedicineSearchState.success(results: data.products));
+        
+        emit(MedicineSearchState.success(results: data.products,warehouse: data.warehouses));
       },
       failure: (e) =>
           emit(MedicineSearchState.error(e.apiErrorModel.message ?? '')),

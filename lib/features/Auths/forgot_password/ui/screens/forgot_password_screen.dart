@@ -27,7 +27,7 @@ class ForogotPasswordScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: Colors.red,
+      backgroundColor: Colors.white,
       body: BlocListener<ForgetPasswordCubit, ForgetPassState>(
         listener: (context, state) {
           // TODO: implement listener
@@ -91,10 +91,10 @@ class ForogotPasswordScreen extends StatelessWidget {
                     ),
                   ),
 
-                  verticalSpace(62),
+                  // verticalSpace(62),
                   Container(
                     width: double.infinity,
-                    height: 360.h,
+                    height: 500.h,
                     child: ImageHandler(
                       img: shield1,
                       width: double.infinity,
@@ -102,8 +102,8 @@ class ForogotPasswordScreen extends StatelessWidget {
                       fit: BoxFit.fill,
                     ),
                   ),
-                  verticalSpace(58),
 
+                  // verticalSpace(58),
                   Padding(
                     padding: EdgeInsets.only(left: 16.w, right: 16.w),
                     child: Column(

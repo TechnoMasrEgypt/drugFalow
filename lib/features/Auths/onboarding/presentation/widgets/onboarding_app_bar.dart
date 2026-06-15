@@ -220,3 +220,101 @@ class _LanguageBottomSheetState extends State<LanguageBottomSheet> {
     );
   }
 }
+
+
+
+class OnboardingAppBarreversed extends StatelessWidget {
+  final bool showBackButton;
+
+  const OnboardingAppBarreversed({super.key, this.showBackButton = false});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: context.width / 30),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          
+          GestureDetector(
+            onTap: () {
+              showModalBottomSheet(
+                context: context,
+                backgroundColor: Colors.transparent,
+                builder: (_) => const LanguageBottomSheet(),
+              );
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: context.width / 40,
+                vertical: context.height / 85,
+              ),
+              decoration: BoxDecoration(
+                color: white,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: colorD1d1dB, width: 1),
+              ),
+              child: BlocBuilder<AppCubit, AppState>(
+                builder: (context, state) {
+                  final cubit = context.read<AppCubit>();
+
+                  return Text(
+                    cubit.currentLangCode == 'ar' ? 'العربية' : 'English',
+                    style: TextStyles.textStyleNormal13.copyWith(
+                      color: color121217,
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),TextButton(
+            style: TextButton.styleFrom(
+              padding: EdgeInsets.zero,
+              minimumSize: Size(50, 30),
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              alignment: Alignment.center,
+            ),
+            onPressed: () {
+              context.read<OnboardingCubit>().controller.animateToPage(
+                2,
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.easeInOut,
+              );
+            },
+            child: showBackButton
+                ? IconButton(
+                    onPressed: () => Navigator.pop(context),
+                    icon: Icon(
+                      Icons.arrow_back,
+                      size: 25.sp,
+                      color: color121217,
+                    ),
+                  )
+                : TextButton(
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                      minimumSize: Size(50.w, 30.h),
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      alignment: Alignment.center,
+                    ),
+                    onPressed: () {
+                      context.read<OnboardingCubit>().controller.animateToPage(
+                        2,
+                        duration: const Duration(milliseconds: 500),
+                        curve: Curves.easeInOut,
+                      );
+                    },
+                    child: Text(
+                      context.translate(LangKeys.skip),
+                      style: TextStyles.textStyleNormal13.copyWith(
+                        color: color121217,
+                      ),
+                    ),
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+}

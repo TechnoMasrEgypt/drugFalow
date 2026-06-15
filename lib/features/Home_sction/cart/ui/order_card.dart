@@ -6,13 +6,16 @@ import 'package:drug_flow/features/Home_sction/cart/ui/coupon_section.dart';
 import 'package:drug_flow/features/Home_sction/cart/ui/order_summary.dart';
 import 'package:drug_flow/features/Home_sction/cart/ui/product_item.dart';
 import 'package:drug_flow/features/Home_sction/cart/ui/widgets.dart';
+import 'package:drug_flow/features/Home_sction/orders/domain/entities/create_order/create_order_params.dart';
+import 'package:drug_flow/features/Home_sction/orders/presentation/cubit/orders/orders_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class OrderCard extends StatelessWidget {
   const OrderCard({
     super.key,
-    // required this.item, // ← the specific cart item (product, qty, price)
+    required this.isDrafted,
     required this.cart, // ← the parent cart (totals, warehouse)
     required this.isSaveForLater,
     required this.onConfirm,
@@ -20,6 +23,7 @@ class OrderCard extends StatelessWidget {
     required this.onSaveForLater,
     required this.onProductTap,
   });
+  final bool isDrafted;
 
   final CartDataModel cart;
   final bool isSaveForLater;
@@ -52,11 +56,7 @@ class OrderCard extends StatelessWidget {
           ...items.map(
             (item) => Column(
               children: [
-                ProductItem(
-                  item: item,
-                  onTap: onProductTap,
-                  isdrafted: isSaveForLater,
-                ),
+                ProductItem(item: item, isdrafted: isSaveForLater),
                 // Thin divider between items, not after the last one
                 if (item != items.last)
                   Divider(
@@ -70,7 +70,7 @@ class OrderCard extends StatelessWidget {
           const SizedBox(height: 12),
 
           // ── Coupon section (stateless, no change needed) ───────────────
-          const CouponSection(),
+          CouponSection(cartId: cart.id),
 
           const SizedBox(height: 12),
 
@@ -114,6 +114,9 @@ class OrderCard extends StatelessWidget {
                 child: CustomButton(
                   btnTitle: 'تأكيد الطلب',
                   onPressed: () {
+                    context.read<OrdersCubit>().createOrder(
+                      CreateOrderParams(cartId: cart.id, isDrafted: isDrafted),
+                    );
                     showModalBottomSheet(
                       context: context,
                       backgroundColor: Colors.transparent,
