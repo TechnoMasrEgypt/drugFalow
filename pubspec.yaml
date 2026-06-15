@@ -67,8 +67,6 @@ dependencies:
   flutter_launcher_icons: ^0.14.4
   url_launcher: ^6.3.2
   carousel_slider: ^5.1.2
-  firebase_messaging: ^16.3.0
-  firebase_core: ^4.10.0
   flutter_local_notifications: ^17.2.4
 
 dev_dependencies:
